@@ -1,10 +1,15 @@
 import Vue from 'vue'
 import router from '@router'
 import store from '@state/store'
+import Antd from 'ant-design-vue'
 import App from './app.vue'
+import 'ant-design-vue/dist/antd.css'
 
 // Globally register all `_base`-prefixed components
 import '@components/_globals'
+Vue.config.productionTip = false
+
+Vue.use(Antd)
 
 // Don't warn about using the dev version of Vue in development.
 Vue.config.productionTip = process.env.NODE_ENV === 'production'
