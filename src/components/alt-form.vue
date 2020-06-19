@@ -92,7 +92,7 @@ export default {
       </div>
 
       <AltSelect
-        v-model="pickedOptimizationCode"
+        v-model="pickedOptimizationAlgrithm"
         :options="['PSO', 'legacy', 'ranWalk']"
         dict="optimizationAlgrithm"
         label="选择优化算法"
