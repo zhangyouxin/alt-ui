@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import router from '@router'
 import store from '@state/store'
-import Antd from 'ant-design-vue'
+import Antd, { FormModel } from 'ant-design-vue'
 import App from './app.vue'
 import 'ant-design-vue/dist/antd.css'
+import '@src/antd-base.css'
 
 // Globally register all `_base`-prefixed components
 import '@components/_globals'
+Vue.use(FormModel)
 Vue.config.productionTip = false
 
 Vue.use(Antd)

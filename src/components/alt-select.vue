@@ -1,7 +1,15 @@
 <script>
 import * as dicts from '@utils/alt-form-config.js'
 export default {
+  model: {
+    prop: 'value',
+    event: 'change',
+  },
   props: {
+    value: {
+      type: [String, Number],
+      default: '',
+    },
     options: {
       type: Array,
       default() {
@@ -9,9 +17,15 @@ export default {
       },
     },
     dict: {
-      type: Object,
+      type: String,
       default() {
-        return {}
+        return ''
+      },
+    },
+    label: {
+      type: String,
+      default() {
+        return ''
       },
     },
   },
@@ -19,25 +33,37 @@ export default {
     return {}
   },
   computed: {
-    dictOptions: () => {
-      return dicts[this.props.dict]
+    dictOptions: function() {
+      console.log(this.value)
+      return dicts[this.dict]
     },
   },
 }
 </script>
 
 <template>
-  <a-select :default-value="dictOptions[0]">
-    <a-select-option
-      v-for="(item, index) in dictOptions"
-      :key="index"
-      :value="item"
-    >
-      {{ item }}
-    </a-select-option>
-  </a-select>
+  <div :class="$style.container">
+    <div :class="$style.span">{{ `${label}：` }}</div>
+    <a-select v-model="value" @change="$emit('change', $event)">
+      <a-select-option
+        v-for="(name, code) in dictOptions"
+        :key="code"
+        :value="code"
+      >
+        {{ name }}
+      </a-select-option>
+    </a-select>
+  </div>
 </template>
 
 <style lang="scss" module>
 @import '@design';
+.container {
+  margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+.container > .span {
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
 </style>
