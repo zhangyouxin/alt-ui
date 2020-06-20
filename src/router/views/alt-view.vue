@@ -1,23 +1,19 @@
 <script>
 import appConfig from '@src/app.config'
 import Layout from '@layouts/main.vue'
+import AltForm from '@components/alt-form.vue'
 
 export default {
   page: {
     title: '',
     meta: [{ name: 'description', content: appConfig.description }],
   },
-  components: { Layout },
+  components: { Layout, AltForm },
 }
 </script>
 
 <template>
   <Layout>
-    <div>
-      <router-link to="alt-view">加速寿命实验</router-link>
-    </div>
-    <div>
-      <router-link to="ast-view">强化寿命实验</router-link>
-    </div>
+    <AltForm />
   </Layout>
 </template>

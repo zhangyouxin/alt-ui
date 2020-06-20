@@ -7,6 +7,16 @@ export default [
     component: () => lazyLoadView(import('@views/home.vue')),
   },
   {
+    path: '/alt-view',
+    name: 'alt-view',
+    component: () => lazyLoadView(import('@views/alt-view.vue')),
+  },
+  {
+    path: '/ast-view',
+    name: 'ast-view',
+    component: () => lazyLoadView(import('@views/ast-view.vue')),
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => lazyLoadView(import('@views/login.vue')),
