@@ -29,12 +29,12 @@ export default {
           <a-radio value="al">
             加速寿命数据分析
           </a-radio>
-          <a-radio value="as" :disabled="disabled">
+          <!-- <a-radio value="as" :disabled="disabled">
             加速退化数据分析
           </a-radio>
           <a-radio value="dl" :disabled="disabled">
             截尾寿命数据分析
-          </a-radio>
+          </a-radio> -->
         </a-radio-group>
       </a-form-item>
 
@@ -76,13 +76,13 @@ export default {
         label="选择加速模型"
       />
 
-      <a-form-item label="预设加速时间">
+      <a-form-item label="寿命点估计值">
         <a-input v-decorator="presetTime" />
       </a-form-item>
-      <a-form-item label="预设加速次数">
+      <!-- <a-form-item label="预设加速次数">
         <a-input v-decorator="presetTick" />
-      </a-form-item>
-      <a-form-item label="预设可靠性估点">
+      </a-form-item> -->
+      <a-form-item label="可靠性点估计值">
         <a-input v-decorator="presetRelability" />
       </a-form-item>
       <a-form-item>

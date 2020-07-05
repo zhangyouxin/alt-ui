@@ -30,8 +30,7 @@ export default {
   methods: {
     handleSubmit(e) {
       e.preventDefault()
-      console.log('form: ', this.form)
-      console.log('Received values of form: ', e)
+      console.log('form is:', this.form.getFieldsValue())
     },
   },
 }
@@ -73,11 +72,17 @@ export default {
       >
         <span>{{ `应力${a + 1}：` }}</span>
         <div :class="$style.divider" />
-        <AltSelect :options="['temp']" dict="stressCode" label="选择应力类型" />
+        <AltSelect
+          :options="['temp']"
+          dict="stressCode"
+          :form-id="`stressCode${a + 1}`"
+          label="选择应力类型"
+        />
         <AltSelect
           :options="['temp']"
           dict="stressTypeCount"
-          label="选择应力个数"
+          :form-id="`stressTypeCount${a + 1}`"
+          label="选择应力水平个数"
         />
       </div>
 

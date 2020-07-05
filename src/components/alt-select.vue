@@ -28,13 +28,18 @@ export default {
         return ''
       },
     },
+    formId: {
+      type: String,
+      default() {
+        return ''
+      },
+    },
   },
   data() {
     return {}
   },
   computed: {
     dictOptions: function() {
-      console.log(this.value)
       return dicts[this.dict]
     },
   },
@@ -44,15 +49,20 @@ export default {
 <template>
   <div :class="$style.container">
     <div :class="$style.span">{{ `${label}：` }}</div>
-    <a-select v-model="value" @change="$emit('change', $event)">
-      <a-select-option
-        v-for="(name, code) in dictOptions"
-        :key="code"
-        :value="code"
+    <a-form-item>
+      <a-select
+        v-decorator="[formId ? formId : dict]"
+        @change="$emit('change', $event)"
       >
-        {{ name }}
-      </a-select-option>
-    </a-select>
+        <a-select-option
+          v-for="(name, code) in dictOptions"
+          :key="code"
+          :value="code"
+        >
+          {{ name }}
+        </a-select-option>
+      </a-select>
+    </a-form-item>
   </div>
 </template>
 
