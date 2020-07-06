@@ -1,7 +1,9 @@
 <script>
 import Layout from '@layouts/main.vue'
-import * as myapi from '@utils/api'
+// import * as myapi from '@utils/api'
+// eslint-disable-next-line no-unused-vars
 import { tzToDate } from '@utils/format-time'
+// import { altMethods, altComputed } from '@state/helpers'
 
 const columns = [
   {
@@ -50,31 +52,43 @@ export default {
   data() {
     return {
       columns,
-      data: [],
     }
   },
-  async mounted() {
-    const data = await myapi.fetchAlts()
-    this.data = data.map((item, index) => {
-      return {
-        key: item.id,
-        id: item.id,
-        isDone: item.isDone,
-        params: item.params,
-        result: item.result,
-        createdAt: tzToDate(item.createdAt),
-        updatedAt: tzToDate(item.updatedAt),
-      }
-    })
-    console.log(Array.isArray(this.data))
+  computed: {
+    // ...altComputed,
+    datac: function() {
+      return this.$store.state.alts
+    },
+    dataSource: function() {
+      return this.$store.state.alts.map((item, index) => {
+        return {
+          key: item.id,
+          id: item.id,
+          isDone: item.isDone,
+          params: item.params,
+          result: item.result,
+          createdAt: tzToDate(item.createdAt),
+          updatedAt: tzToDate(item.updatedAt),
+        }
+      })
+    },
+  },
+  mounted() {
+    // this.fetchAlts()
+    this.$store.dispatch('fetchAlts')
   },
   page: {
     title: '加速寿命实验',
     meta: [{ name: '加速寿命实验', content: '加速寿命实验' }],
   },
   methods: {
+    // ...altMethods,
     onClickNewAlt: function() {
       this.$router.push('alt-view')
+    },
+    onIdClick: function(e) {
+      console.log(e)
+      this.$router.push(`alt-detail/${e.target.text}`)
     },
   },
 }
@@ -87,10 +101,10 @@ export default {
     </BaseButton>
     <a-table
       :columns="columns"
-      :data-source="data"
+      :data-source="dataSource"
       :class="$style.tableContent"
     >
-      <a slot="id" slot-scope="text">{{ text }}</a>
+      <a slot="id" slot-scope="text" @click="onIdClick">{{ text }}</a>
     </a-table>
   </Layout>
 </template>

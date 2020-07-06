@@ -23,6 +23,7 @@ module.exports = {
   rules: {
     // Allow newlines inside class attribute values
     'string-no-newline': null,
+    'no-unused-vars': 'off',
     // Enforce camelCase for classes and ids, to work better
     // with CSS modules
     'selector-class-pattern': /^[a-z][a-zA-Z]*(-(enter|leave)(-(active|to))?)?$/,

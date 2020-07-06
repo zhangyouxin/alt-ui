@@ -17,6 +17,11 @@ export default [
     component: () => lazyLoadView(import('@views/alt-list.vue')),
   },
   {
+    path: '/alt-detail/:id',
+    name: 'alt-detail',
+    component: () => lazyLoadView(import('@views/alt-detail.vue')),
+  },
+  {
     path: '/ast-view',
     name: 'ast-view',
     component: () => lazyLoadView(import('@views/ast-view.vue')),
