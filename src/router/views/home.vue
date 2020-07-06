@@ -14,7 +14,7 @@ export default {
 <template>
   <Layout>
     <div>
-      <router-link to="alt-view">加速寿命实验</router-link>
+      <router-link to="alt-list">加速寿命实验</router-link>
     </div>
     <div>
       <router-link to="ast-view">强化寿命实验</router-link>

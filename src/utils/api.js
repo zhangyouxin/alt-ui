@@ -15,7 +15,12 @@ export const hello = async () => {
 export const fetchAlts = async () => {
   let result = ''
   await axios
-    .get(API)
+    .get(`${API}/alt`, {
+      params: {
+        page: 1,
+        pageSize: 20,
+      },
+    })
     .then((response) => (result = response.data))
     .catch((error) => console.error(error))
   return result
