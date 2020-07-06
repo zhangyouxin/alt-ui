@@ -1,5 +1,6 @@
 <script>
 import AltSelect from '@components/alt-select.vue'
+import * as myapi from '@utils/api.js'
 export default {
   components: { AltSelect },
   data() {
@@ -28,9 +29,10 @@ export default {
     })
   },
   methods: {
-    handleSubmit(e) {
+    async handleSubmit(e) {
       e.preventDefault()
-      console.log('form is:', this.form.getFieldsValue())
+      const helloMsg = await myapi.newAlt(this.form.getFieldsValue())
+      console.log('form is:', this.form.getFieldsValue(), helloMsg)
     },
   },
 }
