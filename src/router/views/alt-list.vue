@@ -97,7 +97,7 @@ export default {
 <template>
   <Layout>
     <BaseButton @click="onClickNewAlt">
-      新建寿命加速实验
+      新建加速寿命实验
     </BaseButton>
     <a-table
       :columns="columns"

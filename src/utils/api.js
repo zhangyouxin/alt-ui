@@ -1,8 +1,12 @@
 /* eslint-disable no-unused-vars */
-const API = 'http://myapi.weshinekx.cn/api'
-const API1 = 'http://localhost:3080/api'
-export const API_UPLOAD1 = 'http://localhost:6080'
+export const API = 'http://myapi.weshinekx.cn/api'
 export const API_UPLOAD = 'http://upload.weshinekx.cn'
+export const API_PYTHON = 'http://python.weshinekx.cn'
+
+export const API_PYTHON1 = 'http://localhost:7080'
+export const API_UPLOAD1 = 'http://localhost:6080'
+export const API1 = 'http://localhost:3080/api'
+
 const axios = require('axios')
 
 export const hello = async () => {

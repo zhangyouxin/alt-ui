@@ -47,7 +47,7 @@ const store = new Vuex.Store({
         .catch((error) => console.error(error))
       return result
     },
-    fetchAsts({ commit, dispatch, getters }) {
+    fetchAsts(context) {
       const result = 'init value'
       axios
         .get(`${API}/ast`, {
@@ -58,7 +58,8 @@ const store = new Vuex.Store({
         })
         .then((response) => {
           const result = response.data
-          commit('SET_CURRENT_ASTS', result)
+          console.log('got value, commiting', result)
+          context.commit('setAsts', result)
         })
         .catch((error) => console.error(error))
       return result
