@@ -25,7 +25,7 @@ export default {
   },
   beforeCreate() {
     this.form = this.$form.createForm(this, {
-      name: 'customized_form_controls',
+      name: 'alt_form_controls',
     })
   },
   methods: {

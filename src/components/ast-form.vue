@@ -1,9 +1,12 @@
 <script>
 import AstSelect from '@components/ast-select.vue'
+import * as myapi from '@utils/api.js'
 export default {
   components: { AstSelect },
   data() {
-    return {}
+    return {
+      myapi,
+    }
   },
   beforeCreate() {
     this.form = this.$form.createForm(this, {
@@ -11,10 +14,22 @@ export default {
     })
   },
   methods: {
-    handleSubmit(e) {
+    async handleSubmit(e) {
       e.preventDefault()
-      console.log('form: ', this.form)
-      console.log('Received values of form: ', e)
+      console.log('form: ', this.form.getFieldsValue())
+      const msg = await myapi.newAst(this.form.getFieldsValue())
+      console.log('new alt msg:', msg)
+      this.$router.push('ast-list')
+    },
+    handleChangeFile(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList)
+      }
+      if (info.file.status === 'done') {
+        this.$message.success(`${info.file.name} file uploaded successfully`)
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} file upload failed.`)
+      }
     },
   },
 }
@@ -40,50 +55,29 @@ export default {
 
       <a-form-item label="Upload">
         <a-upload
-          v-decorator="[
-            'upload',
-            {
-              valuePropName: 'fileList',
-              getValueFromEvent: normFile,
-            },
-          ]"
-          name="logo"
-          action="/upload.do"
-          list-type="picture"
+          v-decorator="['upload']"
+          name="file"
+          :multiple="true"
+          :action="myapi.API_UPLOAD"
+          @change="handleChangeFile"
         >
           <a-button> <a-icon type="upload" /> Click to upload </a-button>
         </a-upload>
       </a-form-item>
       <AstSelect
-        v-model="pickedStressMode"
         :options="['steady', 'step']"
         dict="stressMode"
         label="选择应力变化模式"
       />
-      <AstSelect
-        v-model="pickedExpDistributeAlgrithm"
-        dict="expDistributeAlgrithm"
-        label="选择经验分布算法"
-      />
-      <AstSelect
-        v-model="pickedParamEstAlgrithm"
-        dict="paramEstAlgrithm"
-        label="选择参数估计算法"
-      />
-      <AstSelect
-        v-model="pickedAceleratModel"
-        dict="aceleratModel"
-        label="选择加速模型"
-      />
+      <AstSelect dict="expDistributeAlgrithm" label="选择经验分布算法" />
+      <AstSelect dict="paramEstAlgrithm" label="选择参数估计算法" />
+      <AstSelect dict="aceleratModel" label="选择加速模型" />
 
       <a-form-item label="寿命点估计值">
-        <a-input v-decorator="presetTime" />
+        <a-input v-decorator="['presetTime']" />
       </a-form-item>
-      <!-- <a-form-item label="预设加速次数">
-        <a-input v-decorator="presetTick" />
-      </a-form-item> -->
       <a-form-item label="可靠性点估计值">
-        <a-input v-decorator="presetRelability" />
+        <a-input v-decorator="['presetRelability']" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" html-type="submit">

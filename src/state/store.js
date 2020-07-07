@@ -19,10 +19,14 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     alts: [],
+    asts: [],
   },
   mutations: {
     setAlts(state, alts) {
       state.alts = alts
+    },
+    setAsts(state, asts) {
+      state.asts = asts
     },
   },
   actions: {
@@ -39,6 +43,22 @@ const store = new Vuex.Store({
           const result = response.data
           console.log('got value, commiting', result)
           context.commit('setAlts', result)
+        })
+        .catch((error) => console.error(error))
+      return result
+    },
+    fetchAsts({ commit, dispatch, getters }) {
+      const result = 'init value'
+      axios
+        .get(`${API}/ast`, {
+          params: {
+            page: 1,
+            pageSize: 20,
+          },
+        })
+        .then((response) => {
+          const result = response.data
+          commit('SET_CURRENT_ASTS', result)
         })
         .catch((error) => console.error(error))
       return result
