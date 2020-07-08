@@ -62,7 +62,6 @@ export default {
     },
   },
   mounted() {
-    // this.fetchAlts()
     this.$store.dispatch('fetchAlt', this.$route.params.id)
   },
   page: {

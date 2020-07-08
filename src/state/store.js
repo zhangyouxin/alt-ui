@@ -23,17 +23,31 @@ const store = new Vuex.Store({
       rows: [],
       currentAlt: {},
     },
-    asts: [],
+    asts: {
+      count: 0,
+      current: 1,
+      rows: [],
+      currentAst: {},
+    },
   },
   mutations: {
     setAlts(state, alts) {
-      state.alts = alts
+      state.alts = {
+        ...state.alts,
+        ...alts,
+      }
     },
     setAsts(state, asts) {
-      state.asts = asts
+      state.asts = {
+        ...state.asts,
+        ...asts,
+      }
     },
     setCurrentAlt(state, alt) {
       state.alts.currentAlt = alt
+    },
+    setCurrentAst(state, ast) {
+      state.asts.currentAst = ast
     },
   },
   actions: {
@@ -65,22 +79,31 @@ const store = new Vuex.Store({
         .catch((error) => console.error(error))
     },
 
-    fetchAsts(context) {
+    fetchAsts(context, e) {
       const result = 'init value'
       axios
         .get(`${process.env.VUE_APP_API}/ast`, {
           params: {
-            page: 1,
-            pageSize: 15,
+            pageNumber: e ? e.current - 1 : 0,
+            pageSize: e ? e.pageSize : 15,
           },
         })
         .then((response) => {
           const result = response.data
-          console.log('got value, commiting', result)
+          result.current = e ? e.current : 1
           context.commit('setAsts', result)
         })
         .catch((error) => console.error(error))
       return result
+    },
+    fetchAst(context, id) {
+      axios
+        .get(`${process.env.VUE_APP_API}/ast/${id}`)
+        .then((response) => {
+          const result = response.data
+          context.commit('setCurrentAst', result)
+        })
+        .catch((error) => console.error(error))
     },
   },
 })

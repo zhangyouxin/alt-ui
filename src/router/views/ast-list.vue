@@ -52,11 +52,17 @@ export default {
     }
   },
   computed: {
-    datac: function() {
-      return this.$store.state.asts
+    pageConfig: function() {
+      const alts = this.$store.state.alts
+      return {
+        current: alts.current,
+        pageSize: 15,
+        total: alts.count,
+        showQuickJumper: true,
+      }
     },
     dataSource: function() {
-      return this.$store.state.asts.map((item, index) => {
+      return this.$store.state.asts.rows.map((item, index) => {
         return {
           key: item.id,
           id: item.id,
@@ -84,6 +90,9 @@ export default {
     onIdClick: function(e) {
       this.$router.push(`ast-detail/${e.target.text}`)
     },
+    onPageChange: function(e) {
+      this.$store.dispatch('fetchAsts', e)
+    },
   },
 }
 </script>
@@ -97,6 +106,8 @@ export default {
       :columns="columns"
       :data-source="dataSource"
       :class="$style.tableContent"
+      :pagination="pageConfig"
+      @change="onPageChange"
     >
       <a slot="id" slot-scope="text" @click="onIdClick">{{ text }}</a>
     </a-table>

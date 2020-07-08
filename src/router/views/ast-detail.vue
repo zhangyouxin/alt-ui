@@ -25,11 +25,7 @@ export default {
   computed: {
     dataSource() {
       const asts = this.$store.state.asts
-      const data = asts.filter((ast) => {
-        return String(ast.id) === this.$route.params.id
-      })
-      const data0 = data[0]
-      console.log(typeof data0)
+      const data0 = asts.currentAst
       const result = [
         {
           key: 'id',
@@ -54,16 +50,20 @@ export default {
         {
           key: 'createdAt',
           attr: '创建时间',
-          value: tzToDate(data0.createdAt),
+          value: data0.createdAt ? tzToDate(data0.createdAt) : '',
         },
         {
           key: 'updatedAt',
           attr: '更新时间',
-          value: tzToDate(data0.updatedAt),
+          value: data0.updatedAt ? tzToDate(data0.updatedAt) : '',
         },
       ]
       return result
     },
+  },
+  mounted() {
+    console.log('mount ast detail', this.$route)
+    this.$store.dispatch('fetchAst', this.$route.params.id)
   },
   page: {
     title: '强化寿命实验',
