@@ -1,32 +1,10 @@
 /* eslint-disable no-unused-vars */
-export const API = 'http://myapi.weshinekx.cn/api'
-export const API_UPLOAD = 'http://upload.weshinekx.cn'
-export const API_PYTHON = 'http://python.weshinekx.cn'
-
-export const API_PYTHON1 = 'http://localhost:7080'
-export const API_UPLOAD1 = 'http://localhost:6080'
-export const API1 = 'http://localhost:3080/api'
-
 const axios = require('axios')
 
 export const hello = async () => {
   let result = ''
   await axios
-    .get(API)
-    .then((response) => (result = response.data))
-    .catch((error) => console.error(error))
-  return result
-}
-
-export const fetchAlts = async () => {
-  let result = ''
-  await axios
-    .get(`${API}/alt`, {
-      params: {
-        page: 1,
-        pageSize: 20,
-      },
-    })
+    .get(process.env.VUE_APP_API)
     .then((response) => (result = response.data))
     .catch((error) => console.error(error))
   return result
@@ -34,17 +12,36 @@ export const fetchAlts = async () => {
 
 export const newAlt = async (params) => {
   let result = ''
+  console.log(`${process.env.VUE_APP_API}/alt`)
   await axios
-    .post(`${API}/alt`, { params: JSON.stringify(params) })
+    .post(`${process.env.VUE_APP_API}/alt`, { params: JSON.stringify(params) })
+    .then((response) => {
+      console.log('new alt done', response.data)
+      return axios
+        .post(`${process.env.VUE_APP_API_PYTHON}`, {
+          params: JSON.stringify(params),
+          type: 'alt',
+          id: response.data.id,
+        })
+        .then((response) => {
+          console.log('python calculation start,', response.data)
+          return (result = response.data)
+        })
+        .catch((error) => console.error(error))
+    })
     .then((response) => (result = response.data))
     .catch((error) => console.error(error))
+
   return result
 }
 
 export const newAst = async (params) => {
   let result = ''
   await axios
-    .post(`${API}/ast`, { params: JSON.stringify(params) })
+    .post(`${process.env.VUE_APP_API}/ast`, {
+      params: JSON.stringify(params),
+      type: 'ast',
+    })
     .then((response) => (result = response.data))
     .catch((error) => console.error(error))
   return result

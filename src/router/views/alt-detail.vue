@@ -25,11 +25,7 @@ export default {
   computed: {
     dataSource() {
       const alts = this.$store.state.alts
-      const data = alts.filter((alt) => {
-        return String(alt.id) === this.$route.params.id
-      })
-      const data0 = data[0]
-      console.log(typeof data0)
+      const data0 = alts.currentAlt
       const result = [
         {
           key: 'id',
@@ -54,16 +50,20 @@ export default {
         {
           key: 'createdAt',
           attr: '创建时间',
-          value: tzToDate(data0.createdAt),
+          value: data0.createdAt ? tzToDate(data0.createdAt) : '',
         },
         {
           key: 'updatedAt',
           attr: '更新时间',
-          value: tzToDate(data0.updatedAt),
+          value: data0.updatedAt ? tzToDate(data0.updatedAt) : '',
         },
       ]
       return result
     },
+  },
+  mounted() {
+    // this.fetchAlts()
+    this.$store.dispatch('fetchAlt', this.$route.params.id)
   },
   page: {
     title: '加速寿命实验',

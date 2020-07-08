@@ -55,12 +55,18 @@ export default {
     }
   },
   computed: {
-    // ...altComputed,
-    datac: function() {
-      return this.$store.state.alts
+    pageConfig: function() {
+      const alts = this.$store.state.alts
+      return {
+        current: alts.current,
+        pageSize: 15,
+        total: alts.count,
+        showQuickJumper: true,
+      }
     },
+    // ...altComputed,
     dataSource: function() {
-      return this.$store.state.alts.map((item, index) => {
+      return this.$store.state.alts.rows.map((item, index) => {
         return {
           key: item.id,
           id: item.id,
@@ -90,6 +96,10 @@ export default {
       console.log(e)
       this.$router.push(`alt-detail/${e.target.text}`)
     },
+    onPageChange: function(e) {
+      console.log(e)
+      this.$store.dispatch('fetchAlts', e)
+    },
   },
 }
 </script>
@@ -103,6 +113,8 @@ export default {
       :columns="columns"
       :data-source="dataSource"
       :class="$style.tableContent"
+      :pagination="pageConfig"
+      @change="onPageChange"
     >
       <a slot="id" slot-scope="text" @click="onIdClick">{{ text }}</a>
     </a-table>
