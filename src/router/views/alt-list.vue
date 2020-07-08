@@ -52,6 +52,7 @@ export default {
   data() {
     return {
       columns,
+      timer: null,
     }
   },
   computed: {
@@ -80,8 +81,13 @@ export default {
     },
   },
   mounted() {
-    // this.fetchAlts()
+    this.pollData()
     this.$store.dispatch('fetchAlts')
+  },
+  destroyed() {
+    console.log('desdroy')
+    clearInterval(this.timer)
+    this.timer = null
   },
   page: {
     title: '加速寿命实验',
@@ -99,6 +105,11 @@ export default {
     onPageChange: function(e) {
       console.log(e)
       this.$store.dispatch('fetchAlts', e)
+    },
+    pollData() {
+      this.timer = setInterval(() => {
+        this.$store.dispatch('fetchAlts')
+      }, 1000)
     },
   },
 }
