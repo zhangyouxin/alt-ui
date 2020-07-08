@@ -29,10 +29,9 @@ export default {
     })
   },
   methods: {
-    async handleSubmit(e) {
+    handleSubmit(e) {
       e.preventDefault()
-      const msg = await myapi.newAlt(this.form.getFieldsValue())
-      console.log('new alt msg:', msg)
+      myapi.newAlt(this.form.getFieldsValue())
       this.$router.push('alt-list')
     },
   },

@@ -13,6 +13,7 @@ const columns = [
     dataIndex: 'value',
     key: 'value',
     width: 80,
+    scopedSlots: { customRender: 'value' },
   },
 ]
 export default {
@@ -20,6 +21,7 @@ export default {
   data() {
     return {
       columns,
+      timer: null,
     }
   },
   computed: {
@@ -61,13 +63,24 @@ export default {
       return result
     },
   },
+  beforeDestroy() {
+    clearInterval(this.timer)
+    this.timer = null
+  },
   mounted() {
-    console.log('mount ast detail', this.$route)
     this.$store.dispatch('fetchAst', this.$route.params.id)
+    this.pollData()
   },
   page: {
     title: '强化寿命实验',
     meta: [{ name: '强化寿命实验', content: '强化寿命实验' }],
+  },
+  methods: {
+    pollData() {
+      this.timer = setInterval(() => {
+        this.$store.dispatch('fetchAst', this.$route.params.id)
+      }, 5000)
+    },
   },
 }
 </script>
@@ -81,6 +94,22 @@ export default {
       :class="$style.tableContent"
       :pagination="false"
     >
+      <div slot="value" slot-scope="text">
+        <div v-if="text === false">
+          <a-spin>
+            <a-icon
+              slot="indicator"
+              type="loading"
+              style="font-size: 24px"
+              spin
+            />
+          </a-spin>
+        </div>
+        <div v-else-if="text === true"
+          ><a-progress type="circle" :percent="100" :width="28"
+        /></div>
+        <div v-else>{{ text }}</div>
+      </div>
     </a-table>
   </Layout>
 </template>

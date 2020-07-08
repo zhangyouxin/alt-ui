@@ -18,6 +18,7 @@ const columns = [
     dataIndex: 'isDone',
     key: 'isDone',
     width: 120,
+    scopedSlots: { customRender: 'isDone' },
   },
   {
     title: '参数',
@@ -84,8 +85,7 @@ export default {
     this.pollData()
     this.$store.dispatch('fetchAlts')
   },
-  destroyed() {
-    console.log('desdroy')
+  beforeDestroy() {
     clearInterval(this.timer)
     this.timer = null
   },
@@ -109,7 +109,7 @@ export default {
     pollData() {
       this.timer = setInterval(() => {
         this.$store.dispatch('fetchAlts')
-      }, 1000)
+      }, 5000)
     },
   },
 }
@@ -128,6 +128,21 @@ export default {
       @change="onPageChange"
     >
       <a slot="id" slot-scope="text" @click="onIdClick">{{ text }}</a>
+      <div slot="isDone" slot-scope="text">
+        <a-spin v-if="text === false">
+          <a-icon
+            slot="indicator"
+            type="loading"
+            style="font-size: 24px"
+            spin
+          />
+        </a-spin>
+        <a-progress
+          v-if="text === true"
+          type="circle"
+          :percent="100"
+          :width="28"
+      /></div>
     </a-table>
   </Layout>
 </template>

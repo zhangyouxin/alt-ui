@@ -14,11 +14,9 @@ export default {
     })
   },
   methods: {
-    async handleSubmit(e) {
+    handleSubmit(e) {
       e.preventDefault()
-      console.log('form: ', this.form.getFieldsValue())
-      const msg = await myapi.newAst(this.form.getFieldsValue())
-      console.log('new alt msg:', msg)
+      myapi.newAst(this.form.getFieldsValue())
       this.$router.push('ast-list')
     },
     handleChangeFile(info) {
