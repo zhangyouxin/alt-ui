@@ -1,11 +1,13 @@
 <script>
 import AstSelect from '@components/ast-select.vue'
+import { get } from 'lodash'
 import * as myapi from '@utils/api.js'
 export default {
   components: { AstSelect },
   data() {
     return {
       myapi,
+      process,
     }
   },
   beforeCreate() {
@@ -16,7 +18,10 @@ export default {
   methods: {
     handleSubmit(e) {
       e.preventDefault()
-      myapi.newAst(this.form.getFieldsValue())
+      const formV = this.form.getFieldsValue()
+      formV.fileName = get(formV, ['upload', 'file', 'response', 'saveName'])
+      formV.upload = undefined
+      myapi.newAst(formV)
       this.$router.push('ast-list')
     },
     handleChangeFile(info) {
@@ -55,8 +60,7 @@ export default {
         <a-upload
           v-decorator="['upload']"
           name="file"
-          :multiple="true"
-          :action="myapi.API_UPLOAD"
+          action="http://upload.weshinekx.cn"
           @change="handleChangeFile"
         >
           <a-button> <a-icon type="upload" /> Click to upload </a-button>
