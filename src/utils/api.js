@@ -12,7 +12,6 @@ export const hello = async () => {
 
 export const newAlt = async (params) => {
   let result = ''
-  console.log(`${process.env.VUE_APP_API}/alt`)
   await axios
     .post(`${process.env.VUE_APP_API}/alt`, { params: JSON.stringify(params) })
     .then((response) => {
@@ -38,11 +37,23 @@ export const newAlt = async (params) => {
 export const newAst = async (params) => {
   let result = ''
   await axios
-    .post(`${process.env.VUE_APP_API}/ast`, {
-      params: JSON.stringify(params),
-      type: 'ast',
+    .post(`${process.env.VUE_APP_API}/ast`, { params: JSON.stringify(params) })
+    .then((response) => {
+      console.log('new ast done', response.data)
+      return axios
+        .post(`${process.env.VUE_APP_API_PYTHON}`, {
+          params: JSON.stringify(params),
+          type: 'ast',
+          id: response.data.id,
+        })
+        .then((response) => {
+          console.log('python calculation start,', response.data)
+          return (result = response.data)
+        })
+        .catch((error) => console.error(error))
     })
     .then((response) => (result = response.data))
     .catch((error) => console.error(error))
+
   return result
 }
