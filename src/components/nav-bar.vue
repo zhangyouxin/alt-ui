@@ -1,5 +1,4 @@
 <script>
-import { authComputed } from '@state/helpers'
 import NavBarRoutes from './nav-bar-routes.vue'
 
 export default {
@@ -14,10 +13,6 @@ export default {
       ],
       loggedInNavRoutes: [
         {
-          name: 'profile',
-          title: () => 'Logged in as ' + this.currentUser.name,
-        },
-        {
           name: 'logout',
           title: 'Log out',
         },
@@ -31,7 +26,12 @@ export default {
     }
   },
   computed: {
-    ...authComputed,
+    username: function() {
+      return this.$store.state.user.username
+    },
+    loggedIn: function() {
+      return !!this.$store.state.user.username
+    },
   },
 }
 </script>
@@ -39,6 +39,7 @@ export default {
 <template>
   <ul :class="$style.container">
     <NavBarRoutes :routes="persistentNavRoutes" />
+    <div v-if="loggedIn" :class="$style.hello"> {{ `你好，${username}` }}</div>
     <NavBarRoutes v-if="loggedIn" :routes="loggedInNavRoutes" />
     <NavBarRoutes v-else :routes="loggedOutNavRoutes" />
   </ul>
@@ -56,6 +57,11 @@ export default {
   > li {
     display: inline-block;
     margin-right: $size-grid-padding;
+  }
+  > .hello {
+    display: inline-block;
+    margin-right: $size-grid-padding;
+    color: $color-link-text;
   }
 }
 </style>

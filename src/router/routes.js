@@ -4,6 +4,7 @@ export default [
   {
     path: '/',
     name: 'home',
+
     component: () => lazyLoadView(import('@views/home.vue')),
   },
   {
@@ -14,6 +15,9 @@ export default [
   {
     path: '/alt-list',
     name: 'alt-list',
+    meta: {
+      authRequired: true,
+    },
     component: () => lazyLoadView(import('@views/alt-list.vue')),
   },
   {
@@ -42,12 +46,9 @@ export default [
     component: () => lazyLoadView(import('@views/login.vue')),
     meta: {
       beforeResolve(routeTo, routeFrom, next) {
-        // If the user is already logged in
-        if (store.getters['auth/loggedIn']) {
-          // Redirect to the home page instead
+        if (store.state.user.username) {
           next({ name: 'home' })
         } else {
-          // Continue to the login page
           next()
         }
       },
@@ -98,9 +99,8 @@ export default [
     path: '/logout',
     name: 'logout',
     meta: {
-      authRequired: true,
       beforeResolve(routeTo, routeFrom, next) {
-        store.dispatch('auth/logOut')
+        store.dispatch('logOut')
         const authRequiredOnPreviousRoute = routeFrom.matched.some(
           (route) => route.meta.authRequired
         )

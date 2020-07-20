@@ -29,6 +29,9 @@ const store = new Vuex.Store({
       rows: [],
       currentAst: {},
     },
+    user: {
+      username: null,
+    },
   },
   mutations: {
     setAlts(state, alts) {
@@ -49,8 +52,29 @@ const store = new Vuex.Store({
     setCurrentAst(state, ast) {
       state.asts.currentAst = ast
     },
+    setUser(state, user) {
+      state.user = {
+        username: user,
+      }
+    },
   },
   actions: {
+    login(context, { username, password }) {
+      if (username === 'admin' && password === 'pass') {
+        context.commit('setUser', 'admin')
+        return new Promise((resolve, reject) => {
+          resolve('admin')
+        })
+      } else {
+        context.commit('setUser', null)
+        return new Promise((resolve, reject) => {
+          reject(new Error('err'))
+        })
+      }
+    },
+    logOut(context) {
+      context.commit('setUser', null)
+    },
     fetchAlts(context, e) {
       const result = 'init value'
       axios

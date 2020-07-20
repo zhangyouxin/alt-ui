@@ -37,6 +37,7 @@ router.beforeEach((routeTo, routeFrom, next) => {
   if (routeFrom.name !== null) {
     // Start the route progress bar.
     NProgress.start()
+    console.log('progress start...')
   }
 
   // Check if auth is required on this route
@@ -47,13 +48,18 @@ router.beforeEach((routeTo, routeFrom, next) => {
   if (!authRequired) return next()
 
   // If auth is required and the user is logged in...
-  if (store.getters['auth/loggedIn']) {
+  // if (store.user.username) {
+  //   // Validate the local user token...
+  //   return store.dispatch('validate').then((validUser) => {
+  //     // Then continue if the token still represents a valid user,
+  //     // otherwise redirect to login.
+  //     validUser ? next() : redirectToLogin()
+  //   })
+  // }
+  console.log('progress miffle...', store.state.user.username)
+  if (store.state.user.username) {
     // Validate the local user token...
-    return store.dispatch('auth/validate').then((validUser) => {
-      // Then continue if the token still represents a valid user,
-      // otherwise redirect to login.
-      validUser ? next() : redirectToLogin()
-    })
+    return next()
   }
 
   // If auth is required and the user is NOT currently logged in,
@@ -76,6 +82,7 @@ router.beforeResolve(async (routeTo, routeFrom, next) => {
   try {
     // For each matched route...
     for (const route of routeTo.matched) {
+      console.log('route', route)
       await new Promise((resolve, reject) => {
         // If a `beforeResolve` hook is defined, call it with
         // the same arguments as the `beforeEnter` hook.

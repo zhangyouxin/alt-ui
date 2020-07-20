@@ -1,6 +1,5 @@
 <script>
 import Layout from '@layouts/main.vue'
-import { authMethods } from '@state/helpers'
 import appConfig from '@src/app.config'
 
 export default {
@@ -28,24 +27,29 @@ export default {
     },
   },
   methods: {
-    ...authMethods,
     // Try to log the user in with the username
     // and password they provided.
     tryToLogIn() {
       this.tryingToLogIn = true
       // Reset the authError if it existed.
       this.authError = null
-      return this.logIn({
-        username: this.username,
-        password: this.password,
-      })
+      return this.$store
+        .dispatch('login', {
+          username: this.username,
+          password: this.password,
+        })
         .then((token) => {
+          console.log('token', token)
+          console.log(
+            'this.$route.query.redirectFrom',
+            this.$route.query.redirectFrom
+          )
           this.tryingToLogIn = false
-
           // Redirect to the originally requested page, or to the home page
           this.$router.push(this.$route.query.redirectFrom || { name: 'home' })
         })
         .catch((error) => {
+          console.log('error')
           this.tryingToLogIn = false
           this.authError = error
         })
