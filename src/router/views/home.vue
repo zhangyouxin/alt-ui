@@ -1,13 +1,13 @@
 <script>
 import appConfig from '@src/app.config'
 import Layout from '@layouts/main.vue'
-
+import CardButton from '@components/card-button.vue'
 export default {
   page: {
     title: '',
     meta: [{ name: 'description', content: appConfig.description }],
   },
-  components: { Layout },
+  components: { Layout, CardButton },
   methods: {
     onAltClick: function() {
       this.$router.push('alt-list')
@@ -22,13 +22,10 @@ export default {
 <template>
   <Layout>
     <div :class="$style.container">
-      <div :class="$style.alt" @click="onAltClick">
-        <span>加速寿命实验</span>
-      </div>
-      <div :class="$style.ast" @click="onAstClick">
-        <span>强化寿命实验</span>
-      </div></div
-    >
+      <CardButton type="1" text="设备管理" />
+      <CardButton type="2" text="加速寿命实验" @click="onAltClick" />
+      <CardButton type="3" text="强化寿命实验" @click="onAstClick" />
+    </div>
   </Layout>
 </template>
 
@@ -48,6 +45,7 @@ export default {
 }
 .container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
 }
 </style>

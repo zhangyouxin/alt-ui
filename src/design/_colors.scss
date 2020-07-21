@@ -14,3 +14,7 @@ $color-input-border: lighten($color-heading-text, 50%);
 $color-button-bg: $color-link-text;
 $color-button-disabled-bg: darken(desaturate($color-button-bg, 20%), 10%);
 $color-button-text: white;
+
+$color-blue-deep: rgb(10, 67, 174);
+$color-blue: rgb(14, 74, 196);
+$nav-color: #f6f6f6;

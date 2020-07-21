@@ -1,5 +1,5 @@
 <script>
-import NavBar from '@components/nav-bar.vue'
+import NavBar from '@components/nav-bar2.vue'
 
 export default {
   components: { NavBar },
@@ -9,7 +9,9 @@ export default {
 <template>
   <div :class="$style.container">
     <NavBar />
-    <slot />
+    <div :class="$style.contentBody">
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -17,8 +19,13 @@ export default {
 @import '@design';
 
 .container {
-  min-width: $size-content-width-min;
-  max-width: $size-content-width-max;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   margin: 0 auto;
+}
+.contentBody {
+  padding: 1rem;
 }
 </style>
