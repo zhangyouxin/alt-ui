@@ -2,14 +2,21 @@ import store from '@state/store'
 
 export default [
   {
+    path: '/home',
+    name: 'home',
+    component: () => lazyLoadView(import('@views/home.vue')),
+  },
+  {
     path: '/',
     name: 'home',
-
     component: () => lazyLoadView(import('@views/home.vue')),
   },
   {
     path: '/alt-view',
     name: 'alt-view',
+    meta: {
+      authRequired: true,
+    },
     component: () => lazyLoadView(import('@views/alt-view.vue')),
   },
   {
@@ -23,21 +30,33 @@ export default [
   {
     path: '/alt-detail/:id',
     name: 'alt-detail',
+    meta: {
+      authRequired: true,
+    },
     component: () => lazyLoadView(import('@views/alt-detail.vue')),
   },
   {
     path: '/ast-list',
     name: 'ast-list',
+    meta: {
+      authRequired: true,
+    },
     component: () => lazyLoadView(import('@views/ast-list.vue')),
   },
   {
     path: '/ast-detail/:id',
     name: 'ast-detail',
+    meta: {
+      authRequired: true,
+    },
     component: () => lazyLoadView(import('@views/ast-detail.vue')),
   },
   {
     path: '/ast-view',
     name: 'ast-view',
+    meta: {
+      authRequired: true,
+    },
     component: () => lazyLoadView(import('@views/ast-view.vue')),
   },
   {

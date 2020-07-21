@@ -23,8 +23,8 @@ export default {
   <Layout>
     <div :class="$style.container">
       <CardButton type="1" text="设备管理" />
-      <CardButton type="2" text="加速寿命实验" @click="onAltClick" />
-      <CardButton type="3" text="强化寿命实验" @click="onAstClick" />
+      <CardButton type="2" text="加速寿命实验" :on-click="onAltClick" />
+      <CardButton type="3" text="强化寿命实验" :on-click="onAstClick" />
     </div>
   </Layout>
 </template>

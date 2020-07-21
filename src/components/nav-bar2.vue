@@ -13,10 +13,11 @@ export default {
       this.$router.push('login')
     },
     onLogoClick() {
-      this.$router.push('')
+      this.$router.push('home')
     },
     onLogOutClick() {
-      this.$store.dispatch('logOut')
+      this.$router.push('logout')
+      // this.$store.dispatch('logOut')
     },
   },
 }
@@ -28,11 +29,11 @@ export default {
       <div :class="$style.logo" @click="onLogoClick">WX可靠性实验平台</div>
       <div v-if="!!username">
         <div :class="$style.user">你好，{{ username }}</div>
-        <div :class="$style.login" @click="onLoginClick">
+        <div :class="$style.login" @click="onLogOutClick">
           登出
         </div>
       </div>
-      <div v-else :class="$style.login" @click="onLogOutClick">
+      <div v-else :class="$style.login" @click="onLoginClick">
         登录
       </div>
       <div :class="$style.shape"> </div>
@@ -56,6 +57,10 @@ export default {
 .login {
   display: inline-block;
   margin-right: 1rem;
+}
+.login,
+.logo {
+  cursor: pointer;
 }
 .content {
   display: flex;
