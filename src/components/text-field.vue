@@ -15,8 +15,10 @@ export default {
 @import '@design';
 .container {
   display: flex;
-  justify-content: space-around;
-  width: 15rem;
+  align-items: center;
+  justify-content: start;
+  width: 20rem;
+  height: 3rem;
   font-size: 1rem;
   font-weight: 600;
 }

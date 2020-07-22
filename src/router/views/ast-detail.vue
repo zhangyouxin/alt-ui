@@ -175,6 +175,6 @@ export default {
 .textContainer {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: start;
 }
 </style>

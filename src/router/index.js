@@ -57,7 +57,7 @@ router.beforeEach((routeTo, routeFrom, next) => {
   //   })
   // }
   console.log('progress miffle...', store.state.user.username)
-  if (store.state.user.username) {
+  if (store.state.user.username && store.state.user.username !== 'null') {
     // Validate the local user token...
     return next()
   }

@@ -13,7 +13,7 @@ export default {
       this.$router.push('login')
     },
     onLogoClick() {
-      this.$router.push('home')
+      this.$router.push('/home')
     },
     onLogOutClick() {
       this.$router.push('logout')
@@ -27,7 +27,7 @@ export default {
   <div :class="$style.bar">
     <div :class="$style.content">
       <div :class="$style.logo" @click="onLogoClick">WX可靠性实验平台</div>
-      <div v-if="!!username">
+      <div v-if="!!username && username !== 'null'">
         <div :class="$style.user">你好，{{ username }}</div>
         <div :class="$style.login" @click="onLogOutClick">
           登出

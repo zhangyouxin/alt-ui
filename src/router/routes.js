@@ -119,6 +119,7 @@ export default [
     name: 'logout',
     meta: {
       beforeResolve(routeTo, routeFrom, next) {
+        localStorage.removeItem('weshinekx-username')
         store.dispatch('logOut')
         const authRequiredOnPreviousRoute = routeFrom.matched.some(
           (route) => route.meta.authRequired

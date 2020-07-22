@@ -30,7 +30,7 @@ const store = new Vuex.Store({
       currentAst: {},
     },
     user: {
-      username: null,
+      username: localStorage.getItem('weshinekx-username'),
     },
   },
   mutations: {
@@ -53,6 +53,7 @@ const store = new Vuex.Store({
       state.asts.currentAst = ast
     },
     setUser(state, user) {
+      localStorage.setItem('weshinekx-username', user)
       state.user = {
         username: user,
       }
