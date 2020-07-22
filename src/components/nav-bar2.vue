@@ -10,7 +10,7 @@ export default {
   },
   methods: {
     onLoginClick() {
-      this.$router.push('login')
+      this.$router.push('/login')
     },
     onLogoClick() {
       this.$router.push('/home')

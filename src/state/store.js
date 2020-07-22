@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import dispatchActionForAllModules from '@utils/dispatch-action-for-all-modules'
 import axios from 'axios'
+import * as api from '@utils/api'
 import modules from './modules'
 
 Vue.use(Vuex)
@@ -30,7 +31,7 @@ const store = new Vuex.Store({
       currentAst: {},
     },
     user: {
-      username: localStorage.getItem(),
+      username: localStorage.getItem('weshinekx-username'),
     },
   },
   mutations: {
@@ -59,8 +60,10 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    login(context, { username, password }) {
-      if (username === 'admin' && password === 'pass') {
+    async login(context, { username, password }) {
+      const response = await api.login({ username, password })
+      console.log('response id', response)
+      if (response) {
         context.commit('setUser', 'admin')
         return new Promise((resolve, reject) => {
           resolve('admin')

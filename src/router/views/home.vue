@@ -14,10 +14,6 @@ export default {
     return {
       datacollection: {},
       pieChartData: {},
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
     }
   },
   page: {
@@ -68,13 +64,13 @@ export default {
           datasets: [
             {
               label: 'alt',
-              backgroundColor: '#f87979',
+              backgroundColor: 'rgba(248, 121, 121, 0.6)',
               borderColor: 'transparent',
               data: labelsArray.map((item) => get(altMap, `${item}.count`, 0)),
             },
             {
               label: 'ast',
-              backgroundColor: '#087979',
+              backgroundColor: 'rgba(8, 121, 121, 0.6)',
               borderColor: 'transparent',
               data: labelsArray.map((item) => get(astMap, `${item}.count`, 0)),
             },
@@ -107,14 +103,11 @@ export default {
     <div :class="$style.container">
       <div :class="$style.charts">
         <WCard title="最近十天仿真次数">
-          <LineChart
-            :chart-data="datacollection"
-            :options="options"
-          ></LineChart>
+          <LineChart :chart-data="datacollection"></LineChart>
         </WCard>
 
         <WCard title="最近仿真分布">
-          <PieChart :chart-data="pieChartData" :options="options"></PieChart>
+          <PieChart :chart-data="pieChartData"></PieChart>
         </WCard>
       </div>
       <CardButton type="1" text="设备管理" />

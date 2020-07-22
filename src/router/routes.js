@@ -65,7 +65,7 @@ export default [
     component: () => lazyLoadView(import('@views/login.vue')),
     meta: {
       beforeResolve(routeTo, routeFrom, next) {
-        if (store.state.user.username) {
+        if (store.state.user.username && store.state.user.username !== 'null') {
           next({ name: 'home' })
         } else {
           next()
