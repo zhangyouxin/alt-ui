@@ -5,6 +5,9 @@ import CardButton from '@components/card-button.vue'
 import LineChart from '@components/line-chart.vue'
 import PieChart from '@components/pie-chart.vue'
 import WCard from '@components/w-card.vue'
+import moment from 'moment'
+import { get } from 'lodash'
+import * as api from '@utils/api.js'
 export default {
   components: { Layout, CardButton, LineChart, PieChart, WCard },
   data() {
@@ -36,35 +39,64 @@ export default {
       return 1
     },
     fetchLineChartData: function() {
-      this.datacollection = {
-        labels: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        datasets: [
-          {
-            label: 'alt',
-            backgroundColor: '#f87979',
-            borderColor: 'transparent',
-            data: [1, 2, 3, 2, 1],
-          },
-          {
-            label: 'ast',
-            backgroundColor: '#087979',
-            borderColor: 'transparent',
-            data: [11, 3, 5, 12, 0],
-          },
-        ],
-      }
+      Promise.all([
+        api.fetchCountLatestAlts(),
+        api.fetchCountLatestAsts(),
+      ]).then((results) => {
+        results[0].reverse()
+        results[1].reverse()
+        const altMap = results[0].reduce((a, c) => {
+          return {
+            ...a,
+            [c.day]: c,
+          }
+        }, {})
+        const astMap = results[1].reduce((a, c) => {
+          return {
+            ...a,
+            [c.day]: c,
+          }
+        }, {})
+        const labelsArray = Array.from(new Array(10).keys()).map((number) => {
+          return moment()
+            .subtract(number, 'days')
+            .format('YYYY-MM-DD')
+        })
+        labelsArray.reverse()
+        this.datacollection = {
+          labels: labelsArray,
+          datasets: [
+            {
+              label: 'alt',
+              backgroundColor: '#f87979',
+              borderColor: 'transparent',
+              data: labelsArray.map((item) => get(altMap, `${item}.count`, 0)),
+            },
+            {
+              label: 'ast',
+              backgroundColor: '#087979',
+              borderColor: 'transparent',
+              data: labelsArray.map((item) => get(astMap, `${item}.count`, 0)),
+            },
+          ],
+        }
+      })
     },
     fetchPieChartData: function() {
-      this.pieChartData = {
-        labels: ['North America', 'South America', 'Australia'],
-        datasets: [
-          {
-            label: 'Population (millions)',
-            backgroundColor: ['#f87979', '#087979', '#f80979'],
-            data: [2478, 5267, 734],
-          },
-        ],
-      }
+      api.fetchCountAll().then((result) => {
+        console.log(result)
+        const altCount = get(result, [0, 'altcount'], 0)
+        const astCount = get(result, [0, 'astcount'], 0)
+        this.pieChartData = {
+          labels: ['寿命加速实验', '寿命强化实验'],
+          datasets: [
+            {
+              backgroundColor: ['#f87979', '#087979'],
+              data: [altCount, astCount],
+            },
+          ],
+        }
+      })
     },
   },
 }
@@ -74,14 +106,14 @@ export default {
   <Layout>
     <div :class="$style.container">
       <div :class="$style.charts">
-        <WCard title="最近一周仿真次数">
+        <WCard title="最近十天仿真次数">
           <LineChart
             :chart-data="datacollection"
             :options="options"
           ></LineChart>
         </WCard>
 
-        <WCard title="最近一周仿真分布">
+        <WCard title="最近仿真分布">
           <PieChart :chart-data="pieChartData" :options="options"></PieChart>
         </WCard>
       </div>

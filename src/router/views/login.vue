@@ -39,17 +39,11 @@ export default {
           password: this.password,
         })
         .then((token) => {
-          console.log('token', token)
-          console.log(
-            'this.$route.query.redirectFrom',
-            this.$route.query.redirectFrom
-          )
           this.tryingToLogIn = false
           // Redirect to the originally requested page, or to the home page
           this.$router.push(this.$route.query.redirectFrom || { name: 'home' })
         })
         .catch((error) => {
-          console.log('error')
           this.tryingToLogIn = false
           this.authError = error
         })

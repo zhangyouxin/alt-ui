@@ -54,6 +54,49 @@ export const newAst = async (params) => {
     })
     .then((response) => (result = response.data))
     .catch((error) => console.error(error))
+  return result
+}
 
+export const fetchCountLatestAlts = async (params) => {
+  let result = ''
+  await axios
+    .get(`${process.env.VUE_APP_API}/countLatestAlts`)
+    .then((response) => {
+      result = response.data
+    })
+    .catch((error) => console.error(error))
+  return result
+}
+
+export const fetchCountLatestAsts = async (params) => {
+  let result = ''
+  await axios
+    .get(`${process.env.VUE_APP_API}/countLatestAsts`)
+    .then((response) => {
+      result = response.data
+    })
+    .catch((error) => console.error(error))
+  return result
+}
+
+export const fetchCountAll = async (params) => {
+  let result = ''
+  await axios
+    .get(`${process.env.VUE_APP_API}/countAll`)
+    .then((response) => {
+      result = response.data
+    })
+    .catch((error) => console.error(error))
+  return result
+}
+
+export const login = async (params) => {
+  let result = ''
+  await axios
+    .post(`${process.env.VUE_APP_API}/login`, { ...params })
+    .then((response) => {
+      result = response.data
+    })
+    .catch((error) => console.error(error))
   return result
 }
