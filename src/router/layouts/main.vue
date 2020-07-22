@@ -26,6 +26,7 @@ export default {
   margin: 0 auto;
 }
 .contentBody {
+  width: 90%;
   padding: 1rem;
 }
 </style>

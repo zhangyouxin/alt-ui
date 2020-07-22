@@ -37,17 +37,19 @@ export default {
     },
     fetchLineChartData: function() {
       this.datacollection = {
-        labels: [this.getRandomInt(), this.getRandomInt()],
+        labels: [0, 1, 2, 3, 4, 5, 6, 7, 8],
         datasets: [
           {
-            label: 'Data One',
+            label: 'alt',
             backgroundColor: '#f87979',
-            data: [this.getRandomInt(), this.getRandomInt()],
+            borderColor: 'transparent',
+            data: [1, 2, 3, 2, 1],
           },
           {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            data: [this.getRandomInt(), this.getRandomInt()],
+            label: 'ast',
+            backgroundColor: '#087979',
+            borderColor: 'transparent',
+            data: [11, 3, 5, 12, 0],
           },
         ],
       }
