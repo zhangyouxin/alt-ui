@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import dispatchActionForAllModules from '@utils/dispatch-action-for-all-modules'
 import axios from 'axios'
 import * as api from '@utils/api'
+import md5 from 'md5'
 import modules from './modules'
 
 Vue.use(Vuex)
@@ -61,8 +62,9 @@ const store = new Vuex.Store({
   },
   actions: {
     async login(context, { username, password }) {
-      const response = await api.login({ username, password })
-      console.log('response id', response)
+      console.log('password id', md5(password))
+
+      const response = await api.login({ username, password: md5(password) })
       if (response) {
         context.commit('setUser', 'admin')
         return new Promise((resolve, reject) => {

@@ -86,9 +86,9 @@ export default {
 <style lang="scss" module>
 @import '@design';
 .card {
-  width: 50rem;
   position: fixed;
   left: 50%;
+  width: 50rem;
   margin: 0 0 0 -25rem;
 }
 .form {
