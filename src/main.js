@@ -2,6 +2,7 @@ import Vue from 'vue'
 import router from '@router'
 import store from '@state/store'
 import Antd, { FormModel } from 'ant-design-vue'
+import TextInput from '@components/text-input.vue'
 import App from './app.vue'
 import 'ant-design-vue/dist/antd.css'
 import '@src/antd-base.css'
@@ -12,6 +13,7 @@ Vue.use(FormModel)
 Vue.config.productionTip = false
 
 Vue.use(Antd)
+Vue.component('w-input', TextInput)
 
 // Don't warn about using the dev version of Vue in development.
 Vue.config.productionTip = process.env.NODE_ENV === 'production'

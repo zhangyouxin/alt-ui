@@ -1,9 +1,6 @@
 <script>
 import Layout from '@layouts/main.vue'
-// import * as myapi from '@utils/api'
-// eslint-disable-next-line no-unused-vars
 import { tzToDate } from '@utils/format-time'
-// import { altMethods, altComputed } from '@state/helpers'
 
 const columns = [
   {
@@ -14,26 +11,31 @@ const columns = [
     scopedSlots: { customRender: 'id' },
   },
   {
-    title: '完成状态',
-    dataIndex: 'isDone',
-    key: 'isDone',
+    title: '备件名称',
+    dataIndex: 'name',
+    key: 'name',
     width: 120,
-    scopedSlots: { customRender: 'isDone' },
   },
   {
-    title: '参数',
-    dataIndex: 'params',
-    key: 'parames',
+    title: '备件编号',
+    dataIndex: 'serial',
+    key: 'serial',
     ellipsis: true,
   },
   {
-    title: '计算结果',
-    dataIndex: 'result',
-    key: 'result',
+    title: '备件类型',
+    dataIndex: 'type',
+    key: 'type',
     ellipsis: true,
   },
   {
-    title: '创建时间',
+    title: '仓库位置',
+    dataIndex: 'location',
+    key: 'location',
+    ellipsis: true,
+  },
+  {
+    title: '入库时间',
     dataIndex: 'createdAt',
     key: 'createdAt',
     width: 160,
@@ -53,7 +55,6 @@ export default {
   data() {
     return {
       columns,
-      timer: null,
     }
   },
   computed: {
@@ -66,15 +67,15 @@ export default {
         showQuickJumper: true,
       }
     },
-    // ...altComputed,
     dataSource: function() {
-      return this.$store.state.alts.rows.map((item, index) => {
+      return this.$store.state.devices.rows.map((item, index) => {
         return {
           key: item.id,
           id: item.id,
-          isDone: item.isDone,
-          params: item.params,
-          result: item.result,
+          name: item.name,
+          type: item.type,
+          serial: item.serial,
+          location: item.location,
           createdAt: tzToDate(item.createdAt),
           updatedAt: tzToDate(item.updatedAt),
         }
@@ -82,21 +83,15 @@ export default {
     },
   },
   mounted() {
-    // this.pollData()
-    this.$store.dispatch('fetchAlts')
-  },
-  beforeDestroy() {
-    clearInterval(this.timer)
-    this.timer = null
+    this.$store.dispatch('fetchDevices')
   },
   page: {
-    title: '加速寿命实验',
-    meta: [{ name: '加速寿命实验', content: '加速寿命实验' }],
+    title: '备件列表',
+    meta: [{ name: '备件列表', content: '备件列表' }],
   },
   methods: {
-    // ...altMethods,
-    onClickNewAlt: function() {
-      this.$router.push('alt-view')
+    onClickNewDevice: function() {
+      this.$router.push('device')
     },
     onIdClick: function(e) {
       console.log(e)
@@ -106,19 +101,14 @@ export default {
       console.log(e)
       this.$store.dispatch('fetchAlts', e)
     },
-    pollData() {
-      this.timer = setInterval(() => {
-        this.$store.dispatch('fetchAlts')
-      }, 5000)
-    },
   },
 }
 </script>
 
 <template>
   <Layout>
-    <BaseButton @click="onClickNewAlt">
-      新建加速寿命实验
+    <BaseButton @click="onClickNewDevice">
+      新备件入库
     </BaseButton>
     <a-table
       :columns="columns"
@@ -128,21 +118,6 @@ export default {
       @change="onPageChange"
     >
       <a slot="id" slot-scope="text" @click="onIdClick">{{ text }}</a>
-      <div slot="isDone" slot-scope="text">
-        <a-spin v-if="text === false">
-          <a-icon
-            slot="indicator"
-            type="loading"
-            style="font-size: 24px"
-            spin
-          />
-        </a-spin>
-        <a-progress
-          v-if="text === true"
-          type="circle"
-          :percent="100"
-          :width="28"
-      /></div>
     </a-table>
   </Layout>
 </template>

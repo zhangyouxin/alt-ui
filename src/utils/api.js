@@ -34,6 +34,15 @@ export const newAlt = async (params) => {
   return result
 }
 
+export const newDevice = async (params) => {
+  let result = ''
+  await axios
+    .post(`${process.env.VUE_APP_API}/device`, { ...params })
+    .then((response) => (result = response.data))
+    .catch((error) => console.error(error))
+  return result
+}
+
 export const newAst = async (params) => {
   let result = ''
   await axios

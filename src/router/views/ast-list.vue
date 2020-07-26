@@ -79,7 +79,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch('fetchAsts')
-    this.pollData()
+    // this.pollData()
   },
   beforeDestroy() {
     clearInterval(this.timer)

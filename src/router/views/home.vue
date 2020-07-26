@@ -31,6 +31,9 @@ export default {
     onAstClick: function() {
       this.$router.push('ast-list')
     },
+    onDeviceClick: function() {
+      this.$router.push('device-list')
+    },
     getRandomInt: function() {
       return 1
     },
@@ -84,7 +87,7 @@ export default {
         const altCount = get(result, [0, 'altcount'], 0)
         const astCount = get(result, [0, 'astcount'], 0)
         this.pieChartData = {
-          labels: ['寿命加速实验', '寿命强化实验'],
+          labels: ['寿命加速实验', '可靠性评估实验'],
           datasets: [
             {
               backgroundColor: ['#f87979', '#087979'],
@@ -110,9 +113,9 @@ export default {
           <PieChart :chart-data="pieChartData"></PieChart>
         </WCard>
       </div>
-      <CardButton type="1" text="设备管理" />
+      <CardButton type="1" text="设备管理" :on-click="onDeviceClick" />
       <CardButton type="2" text="加速寿命实验" :on-click="onAltClick" />
-      <CardButton type="3" text="强化寿命实验" :on-click="onAstClick" />
+      <CardButton type="3" text="分析与评估" :on-click="onAstClick" />
     </div>
   </Layout>
 </template>

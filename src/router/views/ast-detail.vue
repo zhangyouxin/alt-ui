@@ -4,6 +4,8 @@ import WCard from '@components/w-card.vue'
 import TextField from '@components/text-field.vue'
 import LineChart from '@components/line-chart.vue'
 import { tzToDate } from '@utils/format-time'
+import { get } from 'lodash'
+import { resultMapping } from '@utils/ast-form-config.js'
 const columns = [
   {
     title: '属性',
@@ -12,6 +14,7 @@ const columns = [
     width: 80,
   },
   {
+    ellipsis: true,
     title: '值',
     dataIndex: 'value',
     key: 'value',
@@ -25,28 +28,42 @@ export default {
     return {
       columns,
       timer: null,
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
     }
   },
   computed: {
+    labelConfig() {
+      return resultMapping
+    },
+    results() {
+      return this.$store.state.asts.currentCurves
+    },
+    hasResults() {
+      return !!this.results
+    },
+    reliabilityPointEst() {
+      return get(this.results, 'reliabilityPointEst')
+    },
+    lifePointEst() {
+      return get(this.results, 'lifePointEst')
+    },
+    normalLife() {
+      return get(this.results, 'normalLife')
+    },
     accelarateModelCurve() {
+      const results = this.results
+      if (!results) {
+        return null
+      }
+      const datas = get(results, 'accelarateModelCurve[1]')
+      console.log(datas)
       return {
-        labels: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        labels: get(results, 'accelarateModelCurve[0]'),
         datasets: [
           {
             label: 'alt',
             backgroundColor: '#f87979',
             borderColor: 'transparent',
-            data: [1, 2, 3, 2, 1],
-          },
-          {
-            label: 'ast',
-            backgroundColor: '#087979',
-            borderColor: 'transparent',
-            data: [11, 3, 5, 12, 0],
+            data: datas,
           },
         ],
       }
@@ -95,7 +112,8 @@ export default {
   },
   mounted() {
     this.$store.dispatch('fetchAst', this.$route.params.id)
-    this.pollData()
+    this.$store.dispatch('fetchAstResult', this.$route.params.id)
+    // this.pollData()
   },
   page: {
     title: '强化寿命实验',
@@ -139,23 +157,19 @@ export default {
         </div>
       </a-table>
     </WCard>
-    <div>
+    <div v-if="hasResults">
       <WCard title="实验结果">
         <div :class="$style.textContainer">
-          <TextField label="sampleKey" value="sampleValue" />
-          <TextField label="sampleKey" value="sampleValue" />
-          <TextField label="sampleKey" value="sampleValue" />
-          <TextField label="sampleKey" value="sampleValue" />
-          <TextField label="sampleKey" value="sampleValue" />
-          <TextField label="sampleKey" value="sampleValue" />
-          <TextField label="sampleKey" value="sampleValue" />
+          <TextField
+            :label="labelConfig.reliabilityPointEst"
+            :value="reliabilityPointEst"
+          />
+          <TextField :label="labelConfig.lifePointEst" :value="lifePointEst" />
+          <TextField :label="labelConfig.normalLife" :value="normalLife" />
         </div>
       </WCard>
       <WCard title="加速模型趋势">
-        <LineChart
-          :chart-data="accelarateModelCurve"
-          :options="chartOptions"
-        ></LineChart>
+        <LineChart :chart-data="accelarateModelCurve"></LineChart>
       </WCard>
     </div>
   </Layout>

@@ -24,12 +24,20 @@ const store = new Vuex.Store({
       current: 1,
       rows: [],
       currentAlt: {},
+      currentCurves: null,
+    },
+    devices: {
+      count: 0,
+      current: 1,
+      rows: [],
+      currentAlt: {},
     },
     asts: {
       count: 0,
       current: 1,
       rows: [],
       currentAst: {},
+      currentCurves: null,
     },
     user: {
       username: localStorage.getItem('weshinekx-username'),
@@ -40,6 +48,12 @@ const store = new Vuex.Store({
       state.alts = {
         ...state.alts,
         ...alts,
+      }
+    },
+    setDevices(state, devices) {
+      state.devices = {
+        ...state.devices,
+        ...devices,
       }
     },
     setAsts(state, asts) {
@@ -54,21 +68,52 @@ const store = new Vuex.Store({
     setCurrentAst(state, ast) {
       state.asts.currentAst = ast
     },
+    setCurrentAltCurves(state, curves) {
+      state.alts.currentCurves = curves
+    },
+    setCurrentAstCurves(state, curves) {
+      state.asts.currentCurves = curves
+    },
     setUser(state, user) {
+      localStorage.setItem('weshinekx-username', user)
       state.user = {
         username: user,
       }
     },
   },
   actions: {
+    fetchAstResult(context, id) {
+      console.log(process.env)
+      return axios
+        .get(`${process.env.VUE_APP_API_ES}/ast/_doc/${id}`)
+        .then((response) => {
+          console.log(response)
+          context.commit('setCurrentAstCurves', response.data._source)
+        })
+        .catch((err) => {
+          console.log(err)
+          context.commit('setCurrentAstCurves', null)
+        })
+    },
+    fetchAltResult(context, id) {
+      console.log(process.env)
+      return axios
+        .get(`${process.env.VUE_APP_API_ES}/alt/_doc/${id}`)
+        .then((response) => {
+          console.log(response)
+          context.commit('setCurrentAltCurves', response.data._source)
+        })
+        .catch((err) => {
+          console.log(err)
+          context.commit('setCurrentAltCurves', null)
+        })
+    },
     async login(context, { username, password }) {
-      console.log('password id', md5(password))
-
       const response = await api.login({ username, password: md5(password) })
       if (response) {
-        context.commit('setUser', 'admin')
+        context.commit('setUser', username)
         return new Promise((resolve, reject) => {
-          resolve('admin')
+          resolve(username)
         })
       } else {
         context.commit('setUser', null)
@@ -93,6 +138,23 @@ const store = new Vuex.Store({
           const result = response.data
           result.current = e ? e.current : 1
           context.commit('setAlts', result)
+        })
+        .catch((error) => console.error(error))
+      return result
+    },
+    fetchDevices(context, e) {
+      const result = 'init value'
+      axios
+        .get(`${process.env.VUE_APP_API}/device`, {
+          params: {
+            pageNumber: e ? e.current - 1 : 0,
+            pageSize: e ? e.pageSize : 15,
+          },
+        })
+        .then((response) => {
+          const result = response.data
+          result.current = e ? e.current : 1
+          context.commit('setDevices', result)
         })
         .catch((error) => console.error(error))
       return result

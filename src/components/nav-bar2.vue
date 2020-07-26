@@ -16,8 +16,7 @@ export default {
       this.$router.push('/home')
     },
     onLogOutClick() {
-      this.$router.push('logout')
-      // this.$store.dispatch('logOut')
+      this.$router.push('/logout')
     },
   },
 }

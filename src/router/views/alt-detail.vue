@@ -73,7 +73,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch('fetchAlt', this.$route.params.id)
-    this.pollData()
+    // this.pollData()
   },
   beforeDestroy() {
     clearInterval(this.timer)

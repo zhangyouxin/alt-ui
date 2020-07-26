@@ -12,6 +12,22 @@ export default [
     component: () => lazyLoadView(import('@views/home.vue')),
   },
   {
+    path: '/device',
+    name: 'device',
+    meta: {
+      authRequired: true,
+    },
+    component: () => lazyLoadView(import('@views/device-mng.vue')),
+  },
+  {
+    path: '/device-list',
+    name: 'device-list',
+    meta: {
+      authRequired: true,
+    },
+    component: () => lazyLoadView(import('@views/device-list.vue')),
+  },
+  {
     path: '/alt-view',
     name: 'alt-view',
     meta: {

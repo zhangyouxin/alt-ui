@@ -21,3 +21,9 @@ export const aceleratModel = {
   peck: 'peck',
   eyring: '艾琳',
 }
+
+export const resultMapping = {
+  reliabilityPointEst: '可靠性预估点',
+  lifePointEst: '寿命估算',
+  normalLife: '一般寿命',
+}
