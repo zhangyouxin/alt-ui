@@ -59,11 +59,11 @@ export default {
   },
   computed: {
     pageConfig: function() {
-      const alts = this.$store.state.alts
+      const devices = this.$store.state.devices
       return {
-        current: alts.current,
+        current: devices.current,
         pageSize: 15,
-        total: alts.count,
+        total: devices.count,
         showQuickJumper: true,
       }
     },

@@ -55,11 +55,11 @@ export default {
   },
   computed: {
     pageConfig: function() {
-      const alts = this.$store.state.alts
+      const asts = this.$store.state.asts
       return {
-        current: alts.current,
+        current: asts.current,
         pageSize: 15,
-        total: alts.count,
+        total: asts.count,
         showQuickJumper: true,
       }
     },
