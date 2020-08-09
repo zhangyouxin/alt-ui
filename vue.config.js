@@ -44,6 +44,13 @@ module.exports = {
         !process.env.VUE_APP_TEST &&
         'warning'
     )
+    config.module
+      .rule('plotly')
+      .test(/\.js$/)
+      .use('ify-loader')
+      .loader('ify-loader')
+      .end()
+    // 你还可以再添加一个 loader
   },
   css: {
     // Enable CSS source maps.

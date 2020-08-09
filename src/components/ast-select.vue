@@ -49,7 +49,7 @@ export default {
 <template>
   <div :class="$style.container">
     <div :class="$style.span">{{ `${label}：` }}</div>
-    <a-form-item>
+    <a-form-item :class="$style.select">
       <a-select
         v-decorator="[formId ? formId : dict]"
         @change="$emit('change', $event)"
@@ -69,9 +69,15 @@ export default {
 <style lang="scss" module>
 @import '@design';
 .container {
-  margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  margin: 0.5rem 4rem 0.5rem 0.5rem;
+  .select {
+    width: 10rem;
+  }
 }
 .container > .span {
+  padding-top: 0.5rem;
   margin-bottom: 0.3rem;
   font-size: 1rem;
   font-weight: 500;

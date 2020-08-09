@@ -86,8 +86,8 @@ export default {
     this.timer = null
   },
   page: {
-    title: '强化寿命实验',
-    meta: [{ name: '强化寿命实验', content: '强化寿命实验' }],
+    title: '数据分析与评估',
+    meta: [{ name: '数据分析与评估', content: '数据分析与评估' }],
   },
   methods: {
     // ...altMethods,
@@ -112,7 +112,7 @@ export default {
 <template>
   <Layout>
     <BaseButton @click="onClickNewAlt">
-      新建强化寿命实验
+      新建数据分析与评估
     </BaseButton>
     <a-table
       :columns="columns"

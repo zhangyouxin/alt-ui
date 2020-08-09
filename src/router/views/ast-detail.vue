@@ -3,6 +3,7 @@ import Layout from '@layouts/main.vue'
 import WCard from '@components/w-card.vue'
 import TextField from '@components/text-field.vue'
 import LineChart from '@components/line-chart.vue'
+import VuePlotly from '@statnett/vue-plotly'
 import { tzToDate } from '@utils/format-time'
 import { get } from 'lodash'
 import { resultMapping } from '@utils/ast-form-config.js'
@@ -23,7 +24,7 @@ const columns = [
   },
 ]
 export default {
-  components: { Layout, WCard, LineChart, TextField },
+  components: { Layout, WCard, LineChart, TextField, VuePlotly },
   data() {
     return {
       columns,
@@ -31,6 +32,41 @@ export default {
     }
   },
   computed: {
+    accelerateFactorCurveData() {
+      const detail = this.results.accelerateFactorCurve
+      console.log('accelerateFactorCurve', detail)
+      return detail
+    },
+    accelerateFactorCurve() {
+      const accelerateFactorCurve = this.accelerateFactorCurveData
+      let curveData = []
+      if (accelerateFactorCurve.length === 3) {
+        curveData = accelerateFactorCurve[2]
+      }
+      return [
+        {
+          type: 'surface',
+          z: curveData,
+        },
+      ]
+    },
+    d3Data() {
+      return {
+        layout: {
+          title: '',
+          autosize: false,
+          width: 500,
+          height: 500,
+          margin: {
+            l: 65,
+            r: 50,
+            b: 65,
+            t: 90,
+          },
+        },
+        options: {},
+      }
+    },
     labelConfig() {
       return resultMapping
     },
@@ -46,27 +82,95 @@ export default {
     lifePointEst() {
       return get(this.results, 'lifePointEst')
     },
+    bestLifeFitModel() {
+      return get(this.results, 'bestLifeFitModel')
+    },
     normalLife() {
       return get(this.results, 'normalLife')
     },
-    accelarateModelCurve() {
-      const results = this.results
-      if (!results) {
-        return null
-      }
-      const datas = get(results, 'accelarateModelCurve[1]')
-      console.log(datas)
-      return {
-        labels: get(results, 'accelarateModelCurve[0]'),
-        datasets: [
+    parameterName() {
+      return get(this.results, 'parameterName')
+    },
+    parameterSet() {
+      return get(this.results, 'parameterSet')
+    },
+    accumulateInvalidCurveData() {
+      const detail = this.results.accumulateInvalidCurve
+      console.log('accumulateInvalidCurve', detail)
+      return detail
+    },
+    accelarateModelCurveData() {
+      const detail = this.results.accelerateModelCurve
+      console.log('accelarateModelCurve', detail)
+      return detail
+    },
+    accumulateInvalidCurve() {
+      const accumulateInvalidCurve = this.accumulateInvalidCurveData
+      let curveData = []
+      if (accumulateInvalidCurve.length === 3) {
+        curveData = accumulateInvalidCurve[2]
+        return [
           {
-            label: 'alt',
-            backgroundColor: '#f87979',
-            borderColor: 'transparent',
-            data: datas,
+            type: 'surface',
+            z: curveData,
           },
-        ],
+        ]
+      } else if (accumulateInvalidCurve.length === 2) {
+        const dims = Array.isArray(accumulateInvalidCurve[1][0])
+          ? accumulateInvalidCurve[1][0].length
+          : 1
+        console.log(dims)
+        const colors = [
+          '#f87979',
+          '#087979',
+          '#080979',
+          '#f87909',
+          '#f00909',
+          '#880909',
+          '#f87119',
+          '#087119',
+          '#080119',
+          '#f87119',
+          '#f00119',
+          '#880119',
+        ]
+        return {
+          labels: accumulateInvalidCurve[0],
+          datasets: new Array(dims).fill(null).map((item, index) => ({
+            label: `累计失效值${index}`,
+            backgroundColor: colors[index],
+            borderColor: 'transparent',
+            data: accumulateInvalidCurve[1].map((res) => res[index]),
+          })),
+        }
       }
+      return undefined
+    },
+    accelarateModelCurve() {
+      const accelarateModelCurve = this.accelarateModelCurveData
+      let curveData = []
+      if (accelarateModelCurve.length === 3) {
+        curveData = accelarateModelCurve[2]
+        return [
+          {
+            type: 'surface',
+            z: curveData,
+          },
+        ]
+      } else if (accelarateModelCurve.length === 2) {
+        return {
+          labels: accelarateModelCurve[0],
+          datasets: [
+            {
+              label: 'alt',
+              backgroundColor: '#f87979',
+              borderColor: 'transparent',
+              data: accelarateModelCurve[1],
+            },
+          ],
+        }
+      }
+      return undefined
     },
     dataSource() {
       const asts = this.$store.state.asts
@@ -120,6 +224,12 @@ export default {
     meta: [{ name: '强化寿命实验', content: '强化寿命实验' }],
   },
   methods: {
+    is3DArray(arr) {
+      return arr && arr.length === 3
+    },
+    is2DArray(arr) {
+      return arr && arr.length === 2
+    },
     pollData() {
       this.timer = setInterval(() => {
         this.$store.dispatch('fetchAst', this.$route.params.id)
@@ -166,10 +276,53 @@ export default {
           />
           <TextField :label="labelConfig.lifePointEst" :value="lifePointEst" />
           <TextField :label="labelConfig.normalLife" :value="normalLife" />
+          <TextField
+            :label="labelConfig.bestLifeFitModel"
+            :value="bestLifeFitModel"
+          />
+          <TextField
+            v-for="(item, index) in parameterName"
+            :key="item"
+            :label="item"
+            :value="parameterSet[index]"
+          />
         </div>
       </WCard>
+      <WCard title="加速失效曲线">
+        <LineChart
+          v-if="is2DArray(accumulateInvalidCurveData)"
+          :chart-data="accumulateInvalidCurve"
+        ></LineChart>
+        <VuePlotly
+          v-if="is3DArray(accumulateInvalidCurveData)"
+          :data="accumulateInvalidCurve"
+          :layout="d3Data.layout"
+          :options="d3Data.options"
+        />
+      </WCard>
       <WCard title="加速模型趋势">
-        <LineChart :chart-data="accelarateModelCurve"></LineChart>
+        <LineChart
+          v-if="is2DArray(accelarateModelCurveData)"
+          :chart-data="accelarateModelCurve"
+        ></LineChart>
+        <VuePlotly
+          v-if="is3DArray(accelarateModelCurveData)"
+          :data="accelarateModelCurve"
+          :layout="d3Data.layout"
+          :options="d3Data.options"
+        />
+      </WCard>
+      <WCard title="加速因子趋势">
+        <LineChart
+          v-if="is2DArray(accelerateFactorCurveData)"
+          :chart-data="accelerateFactorCurve"
+        ></LineChart>
+        <VuePlotly
+          v-if="is3DArray(accelerateFactorCurveData)"
+          :data="accelerateFactorCurve"
+          :layout="d3Data.layout"
+          :options="d3Data.options"
+        />
       </WCard>
     </div>
   </Layout>

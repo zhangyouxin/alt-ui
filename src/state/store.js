@@ -17,6 +17,11 @@ Vue.use(Vuex)
 //   strict: process.env.NODE_ENV !== 'production',
 // })
 
+const extractPropFromString = function(str) {
+  const jsonData = JSON.parse(str)
+  return { ...jsonData }
+}
+
 const store = new Vuex.Store({
   state: {
     alts: {
@@ -88,7 +93,9 @@ const store = new Vuex.Store({
         .get(`${process.env.VUE_APP_API_ES}/ast/_doc/${id}`)
         .then((response) => {
           console.log(response)
-          context.commit('setCurrentAstCurves', response.data._source)
+          context.commit('setCurrentAstCurves', {
+            ...extractPropFromString(response.data._source.result),
+          })
         })
         .catch((err) => {
           console.log(err)
@@ -101,7 +108,9 @@ const store = new Vuex.Store({
         .get(`${process.env.VUE_APP_API_ES}/alt/_doc/${id}`)
         .then((response) => {
           console.log(response)
-          context.commit('setCurrentAltCurves', response.data._source)
+          context.commit('setCurrentAltCurves', {
+            ...extractPropFromString(response.data._source.result),
+          })
         })
         .catch((err) => {
           console.log(err)
