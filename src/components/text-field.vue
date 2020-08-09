@@ -16,7 +16,7 @@ export default {
 .container {
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   width: 20rem;
   height: 3rem;
   font-size: 1rem;

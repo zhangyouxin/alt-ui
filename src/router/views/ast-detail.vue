@@ -342,6 +342,6 @@ export default {
 .textContainer {
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
+  justify-content: flex-start;
 }
 </style>

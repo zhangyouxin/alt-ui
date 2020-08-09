@@ -49,6 +49,6 @@ export default {
 .formContainer {
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
+  justify-content: flex-start;
 }
 </style>

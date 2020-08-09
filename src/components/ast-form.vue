@@ -27,8 +27,32 @@ export default {
       e.preventDefault()
       const formV = this.form.getFieldsValue()
       formV.fileName = get(formV, ['upload', 'file', 'response', 'saveName'])
-      formV.upload = undefined
-      myapi.newAst(formV)
+      formV.fileNameC = get(formV, ['uploadC', 'file', 'response', 'saveName'])
+      formV.fileNameD = get(formV, ['uploadD', 'file', 'response', 'saveName'])
+      console.log('formV', formV)
+      const stressArray = this.pickedStressTypeCountArray.map((index) => {
+        return {
+          stressType: formV[`stressCode${index + 1}`],
+          accelateStress: formV[`accelerateStress${index + 1}`].split(','),
+          normalStress: formV[`normalStress${index + 1}`],
+        }
+      })
+      const dataForSubmit = {
+        filePath: formV.fileName,
+        filePathC: formV.fileNameC,
+        filePathD: formV.fileNameD,
+        analysisType: formV['analysis-model'],
+        testType: formV.stressMode,
+        EDType: formV.expDistributeAlgrithm,
+        paramEst: formV.paramEstAlgrithm,
+        accelateModel: formV.aceleratModel,
+        presetTime: formV.presetTime,
+        presetReliability: formV.presetRelability,
+        stressLevelsNumber: this.pickedStressTypeCount,
+        stresses: stressArray,
+      }
+      console.log('dataForSubmit', dataForSubmit)
+      myapi.newAst(dataForSubmit)
       this.$router.push('ast-list')
     },
     handleChangeFile(info) {
@@ -51,21 +75,41 @@ export default {
     <a-form :form="form" @submit="handleSubmit">
       <a-form-item label="选择加速分析模型" :class="$style.accelarateModel">
         <a-radio-group v-decorator="['analysis-model']">
-          <a-radio value="al">
+          <a-radio value="AL">
             加速寿命数据分析
           </a-radio>
-          <a-radio value="as">
+          <a-radio value="AS">
             加速退化数据分析
           </a-radio>
-          <a-radio value="dl">
+          <a-radio value="DL">
             截尾寿命数据分析
           </a-radio>
         </a-radio-group>
       </a-form-item>
 
-      <a-form-item label="Upload" :class="$style.upload">
+      <a-form-item label="数据文件" :class="$style.upload">
         <a-upload
           v-decorator="['upload']"
+          name="file"
+          action="http://upload.weshinekx.cn"
+          @change="handleChangeFile"
+        >
+          <a-button> <a-icon type="upload" /> Click to upload </a-button>
+        </a-upload>
+      </a-form-item>
+      <a-form-item label="数据文件C" :class="$style.upload">
+        <a-upload
+          v-decorator="['uploadC']"
+          name="file"
+          action="http://upload.weshinekx.cn"
+          @change="handleChangeFile"
+        >
+          <a-button> <a-icon type="upload" /> Click to upload </a-button>
+        </a-upload>
+      </a-form-item>
+      <a-form-item label="数据文件D" :class="$style.upload">
+        <a-upload
+          v-decorator="['uploadD']"
           name="file"
           action="http://upload.weshinekx.cn"
           @change="handleChangeFile"
@@ -164,7 +208,7 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: start;
+  justify-content: flex-start;
   padding: 2rem 2rem 2rem 1rem;
 }
 .stressOption {
