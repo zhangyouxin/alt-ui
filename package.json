@@ -33,7 +33,6 @@
     "@fortawesome/fontawesome-svg-core": "1.2.27",
     "@fortawesome/free-solid-svg-icons": "5.12.1",
     "@fortawesome/vue-fontawesome": "0.1.9",
-    "@statnett/vue-plotly": "^0.3.2",
     "ant-design-vue": "^1.6.2",
     "axios": "^0.19.2",
     "babelify": "^10.0.0",

@@ -119,7 +119,8 @@ const store = new Vuex.Store({
     },
     async login(context, { username, password }) {
       const response = await api.login({ username, password: md5(password) })
-      if (response) {
+      console.log('login response is:', response)
+      if (response === 0) {
         context.commit('setUser', username)
         return new Promise((resolve, reject) => {
           resolve(username)

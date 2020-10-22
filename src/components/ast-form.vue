@@ -87,6 +87,14 @@ export default {
         </a-radio-group>
       </a-form-item>
 
+      <AstSelect
+        :options="['steady', 'step']"
+        dict="stressMode"
+        label="选择应力变化模式"
+      />
+      <AstSelect dict="expDistributeAlgrithm" label="选择经验分布算法" />
+      <AstSelect dict="paramEstAlgrithm" label="选择参数估计算法" />
+
       <a-form-item label="数据文件" :class="$style.upload">
         <a-upload
           v-decorator="['upload']"
@@ -97,7 +105,7 @@ export default {
           <a-button> <a-icon type="upload" /> Click to upload </a-button>
         </a-upload>
       </a-form-item>
-      <a-form-item label="数据文件C" :class="$style.upload">
+      <a-form-item v-if="true" label="数据文件C" :class="$style.upload">
         <a-upload
           v-decorator="['uploadC']"
           name="file"
@@ -107,7 +115,7 @@ export default {
           <a-button> <a-icon type="upload" /> Click to upload </a-button>
         </a-upload>
       </a-form-item>
-      <a-form-item label="数据文件D" :class="$style.upload">
+      <a-form-item v-if="true" label="数据文件D" :class="$style.upload">
         <a-upload
           v-decorator="['uploadD']"
           name="file"
@@ -117,14 +125,6 @@ export default {
           <a-button> <a-icon type="upload" /> Click to upload </a-button>
         </a-upload>
       </a-form-item>
-      <AstSelect
-        :options="['steady', 'step']"
-        dict="stressMode"
-        label="选择应力变化模式"
-      />
-      <AstSelect dict="expDistributeAlgrithm" label="选择经验分布算法" />
-      <AstSelect dict="paramEstAlgrithm" label="选择参数估计算法" />
-      <AstSelect dict="aceleratModel" label="选择加速模型" />
 
       <AstSelect
         v-model="pickedStressTypeCount"
@@ -145,6 +145,7 @@ export default {
           :form-id="`stressCode${a + 1}`"
           label="选择应力类型"
         />
+        <AstSelect dict="aceleratModel" label="选择加速模型" />
         <a-form-item label="应力普通值" :class="$style.textInput">
           <a-input v-decorator="[`normalStress${a + 1}`]" />
         </a-form-item>
@@ -153,10 +154,14 @@ export default {
         </a-form-item>
       </div>
 
-      <a-form-item label="TruncationType(逗号隔开)" :class="$style.textInput">
+      <a-form-item
+        v-if="form.getFieldsValue()['analysis-model'] === 'DL'"
+        label="TruncationType(逗号隔开)"
+        :class="$style.textInput"
+      >
         <a-input v-decorator="['TruncationType']" />
       </a-form-item>
-      <AstSelect dict="distributeFunction" label="选择分布函数" />
+      <!-- <AstSelect dict="distributeFunction" label="选择分布函数" /> -->
       <a-form-item label="寿命点估计值" :class="$style.textInput">
         <a-input v-decorator="['presetTime']" />
       </a-form-item>
@@ -194,7 +199,7 @@ export default {
   .textInput {
     display: flex;
     align-items: flex-start;
-    margin: 0.5rem 4rem 0.5rem 0.5rem;
+    margin: 0.5rem 4rem 0.5rem 0;
     .select {
       width: 10rem;
     }
@@ -213,7 +218,7 @@ export default {
 }
 .stressOption {
   box-sizing: border-box;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   margin: 1rem 0;
   border: 2px dashed #dcdcdc;
   border-radius: 1rem;

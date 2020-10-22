@@ -50,18 +50,6 @@ export default {
         label="选择应力变化模式"
       />
       <AltSelect
-        v-model="pickedAceleratModel"
-        :options="['ph', 'arr', 'ipl', 'peck', 'eyring', 'gEyring', 'll']"
-        dict="aceleratModel"
-        label="选择加速模型"
-      />
-      <AltSelect
-        v-model="pickedOptimizationCode"
-        :options="['aOpt', 'dOpt', 'minDelta']"
-        dict="optimizationCode"
-        label="选择优化方法"
-      />
-      <AltSelect
         v-model="pickedStressTypeCount"
         :options="[1, 2, 3, 4, 5]"
         dict="stressTypeCount"
@@ -75,6 +63,18 @@ export default {
         <span>{{ `应力${a + 1}：` }}</span>
         <div :class="$style.divider" />
         <AltSelect
+          :form-id="`pickedAceleratModel${a + 1}`"
+          :options="['ph', 'arr', 'ipl', 'peck', 'eyring', 'gEyring', 'll']"
+          dict="aceleratModel"
+          label="选择加速模型"
+        />
+        <AltSelect
+          :form-id="`pickedOptimizationCode${a + 1}`"
+          :options="['aOpt', 'dOpt', 'minDelta']"
+          dict="optimizationCode"
+          label="选择优化方法"
+        />
+        <AltSelect
           :options="['temp']"
           dict="stressCode"
           :form-id="`stressCode${a + 1}`"
@@ -86,16 +86,15 @@ export default {
           :form-id="`stressTypeCount${a + 1}`"
           label="选择应力水平个数"
         />
-      </div>
-
-      <div
-        v-for="item in paramCount"
-        :key="`param${item}`"
-        :class="$style.inputField"
-      >
-        <a-form-item :label="`模型参数${item + 1}:：`">
-          <a-input v-decorator="[`param${item}`]" />
-        </a-form-item>
+        <div
+          v-for="item in paramCount"
+          :key="`param${item}`"
+          :class="$style.inputField"
+        >
+          <a-form-item :label="`模型参数${item + 1}:：`">
+            <a-input v-decorator="[`param${item}`]" />
+          </a-form-item>
+        </div>
       </div>
 
       <AltSelect

@@ -3,7 +3,7 @@ import Layout from '@layouts/main.vue'
 import WCard from '@components/w-card.vue'
 import TextField from '@components/text-field.vue'
 import LineChart from '@components/line-chart.vue'
-import VuePlotly from '@statnett/vue-plotly'
+// import VuePlotly from '@statnett/vue-plotly'
 import { tzToDate } from '@utils/format-time'
 import { get } from 'lodash'
 import { resultMapping } from '@utils/ast-form-config.js'
@@ -24,7 +24,7 @@ const columns = [
   },
 ]
 export default {
-  components: { Layout, WCard, LineChart, TextField, VuePlotly },
+  components: { Layout, WCard, LineChart, TextField },
   data() {
     return {
       columns,
@@ -293,36 +293,36 @@ export default {
           v-if="is2DArray(accumulateInvalidCurveData)"
           :chart-data="accumulateInvalidCurve"
         ></LineChart>
-        <VuePlotly
+        <!-- <VuePlotly
           v-if="is3DArray(accumulateInvalidCurveData)"
           :data="accumulateInvalidCurve"
           :layout="d3Data.layout"
           :options="d3Data.options"
-        />
+        /> -->
       </WCard>
       <WCard title="加速模型趋势">
         <LineChart
           v-if="is2DArray(accelarateModelCurveData)"
           :chart-data="accelarateModelCurve"
         ></LineChart>
-        <VuePlotly
+        <!-- <VuePlotly
           v-if="is3DArray(accelarateModelCurveData)"
           :data="accelarateModelCurve"
           :layout="d3Data.layout"
           :options="d3Data.options"
-        />
+        /> -->
       </WCard>
       <WCard title="加速因子趋势">
         <LineChart
           v-if="is2DArray(accelerateFactorCurveData)"
           :chart-data="accelerateFactorCurve"
         ></LineChart>
-        <VuePlotly
+        <!-- <VuePlotly
           v-if="is3DArray(accelerateFactorCurveData)"
           :data="accelerateFactorCurve"
           :layout="d3Data.layout"
           :options="d3Data.options"
-        />
+        /> -->
       </WCard>
     </div>
   </Layout>

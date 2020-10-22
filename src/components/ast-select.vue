@@ -71,7 +71,7 @@ export default {
 .container {
   display: flex;
   align-items: flex-start;
-  margin: 0.5rem 4rem 0.5rem 0.5rem;
+  margin: 0.5rem 4rem 0.5rem 0;
   .select {
     width: 10rem;
   }
@@ -80,6 +80,6 @@ export default {
   padding-top: 0.5rem;
   margin-bottom: 0.3rem;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
 }
 </style>
