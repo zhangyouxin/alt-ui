@@ -3,12 +3,15 @@ import router from '@router'
 import store from '@state/store'
 import Antd, { FormModel } from 'ant-design-vue'
 import TextInput from '@components/text-input.vue'
+import dataV from '@jiaminghi/data-view'
 import App from './app.vue'
 import 'ant-design-vue/dist/antd.css'
 import '@src/antd-base.css'
+import './assets/common.less'
 
 // Globally register all `_base`-prefixed components
 import '@components/_globals'
+Vue.use(dataV)
 Vue.use(FormModel)
 Vue.config.productionTip = false
 

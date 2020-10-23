@@ -4,12 +4,12 @@ export default [
   {
     path: '/home',
     name: 'home',
-    component: () => lazyLoadView(import('@views/home.vue')),
+    component: () => lazyLoadView(import('../datav/index.vue')),
   },
   {
     path: '/',
     name: 'home',
-    component: () => lazyLoadView(import('@views/home.vue')),
+    component: () => lazyLoadView(import('../datav/index.vue')),
   },
   {
     path: '/device',
