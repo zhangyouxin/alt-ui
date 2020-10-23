@@ -18,7 +18,12 @@ Vue.use(Vuex)
 // })
 
 const extractPropFromString = function(str) {
-  const jsonData = JSON.parse(str)
+  const trimedInfinity = str.replaceAll(new RegExp('Infinity', 'ig'), 0)
+  const trimedInfinityAndNan = trimedInfinity.replaceAll(
+    new RegExp('NaN', 'ig'),
+    0
+  )
+  const jsonData = JSON.parse(trimedInfinityAndNan)
   return { ...jsonData }
 }
 
@@ -77,6 +82,7 @@ const store = new Vuex.Store({
       state.alts.currentCurves = curves
     },
     setCurrentAstCurves(state, curves) {
+      console.log('cureves', curves)
       state.asts.currentCurves = curves
     },
     setUser(state, user) {

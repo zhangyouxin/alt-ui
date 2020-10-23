@@ -46,12 +46,12 @@ export const newDevice = async (params) => {
 export const newAst = async (params) => {
   let result = ''
   await axios
-    .post(`${process.env.VUE_APP_API}/ast`, { params: JSON.stringify(params) })
+    .post(`${process.env.VUE_APP_API}/ast`, { params: '隐藏参数' })
     .then((response) => {
       console.log('new ast done', response.data)
       return axios
         .post(`${process.env.VUE_APP_API_PYTHON}`, {
-          params: JSON.stringify(params),
+          ...params,
           type: 'ast',
           id: response.data.id,
         })

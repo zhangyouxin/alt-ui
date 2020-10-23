@@ -2,6 +2,12 @@
 import AstSelect from '@components/ast-select.vue'
 import { get } from 'lodash'
 import * as myapi from '@utils/api.js'
+import {
+  translateExpDistributeAlgrithm,
+  translateParamEstAlgrithm,
+  translateAceleratModel,
+  translateStressCode,
+} from '@utils/ast-form-config'
 export default {
   components: { AstSelect },
   data() {
@@ -32,7 +38,7 @@ export default {
       console.log('formV', formV)
       const stressArray = this.pickedStressTypeCountArray.map((index) => {
         return {
-          stressType: formV[`stressCode${index + 1}`],
+          stressType: translateStressCode[formV[`stressCode${index + 1}`]],
           accelateStress: formV[`accelerateStress${index + 1}`].split(','),
           normalStress: formV[`normalStress${index + 1}`],
         }
@@ -41,14 +47,17 @@ export default {
         filePath: formV.fileName,
         filePathC: formV.fileNameC,
         filePathD: formV.fileNameD,
+        paramA: formV.paramA || '',
+        activationEnergy: formV.activationEnergy || '',
         analysisType: formV['analysis-model'],
         testType: formV.stressMode,
-        EDType: formV.expDistributeAlgrithm,
-        paramEst: formV.paramEstAlgrithm,
-        accelateModel: formV.aceleratModel,
+        EDType: translateExpDistributeAlgrithm[formV.expDistributeAlgrithm],
+        paramEst: translateParamEstAlgrithm[formV.paramEstAlgrithm],
+        accelateModel: translateAceleratModel[formV.aceleratModel],
         presetTime: formV.presetTime,
         presetReliability: formV.presetRelability,
-        stressLevelsNumber: this.pickedStressTypeCount,
+        stressLevelsNumber: '4',
+        stressTypesNumber: '2',
         stresses: stressArray,
       }
       console.log('dataForSubmit', dataForSubmit)
@@ -64,6 +73,82 @@ export default {
       } else if (info.file.status === 'error') {
         this.$message.error(`${info.file.name} file upload failed.`)
       }
+    },
+    getForm() {
+      return this.form.getFieldsValue()
+    },
+    isDLSelected() {
+      // return true
+      return this.form.getFieldsValue().paramEstAlgrithm === 'blue'
+    },
+    selectedModel() {
+      return this.form.getFieldsValue().aceleratModel
+    },
+    selectedMode() {
+      return this.form.getFieldsValue().stressMode
+    },
+    shouldEneryShow() {
+      return (
+        this.selectedMode() === 'step' &&
+        (this.selectedModel() === 'arr' ||
+          this.selectedModel() === 'eyring' ||
+          this.selectedModel() === 'peck')
+      )
+    },
+    shouldParamAShow() {
+      return (
+        this.selectedMode() === 'step' &&
+        (this.selectedModel() === 'ipl' || this.selectedModel() === 'peck')
+      )
+    },
+    shouldFailureThresholdShow() {
+      return this.getForm()['analysis-model'] === 'AS'
+    },
+    shouldSampleNumberShow() {
+      return (
+        this.getForm()['analysis-model'] === 'AS' &&
+        this.selectedMode() === 'steady'
+      )
+    },
+    shouldTestIntervalShow() {
+      return (
+        this.getForm()['analysis-model'] === 'AS' &&
+        this.selectedMode() === 'step'
+      )
+    },
+    shouldTestNumberShow() {
+      return (
+        this.getForm()['analysis-model'] === 'AS' &&
+        this.selectedMode() === 'step'
+      )
+    },
+
+    shouldTruncationTestTypeShow() {
+      return this.getForm()['analysis-model'] === 'DL'
+    },
+    shouldTruncationTimeShow() {
+      return (
+        this.getForm()['analysis-model'] === 'DL' ||
+        this.selectedMode() === 'steady'
+      )
+    },
+    shouldTruncationTypeShow() {
+      return (
+        this.getForm()['analysis-model'] === 'DL' ||
+        this.selectedMode() === 'step'
+      )
+    },
+    shouldLifeDistributionModelShow() {
+      return (
+        this.getForm()['analysis-model'] === 'DL' ||
+        this.selectedMode() === 'steady'
+      )
+    },
+    shouldTestModelShow() {
+      return (
+        this.getForm()['analysis-model'] === 'DL' ||
+        this.selectedMode() === 'step'
+      )
     },
   },
 }
@@ -92,6 +177,53 @@ export default {
         dict="stressMode"
         label="选择应力变化模式"
       />
+
+      <AstSelect
+        v-if="shouldTruncationTestTypeShow()"
+        dict="failureThreshold"
+        label="截尾实验类型"
+      />
+      <a-form-item
+        v-if="shouldTruncationTimeShow()"
+        label="截尾时间"
+        :class="$style.textInput"
+      >
+        <a-input v-decorator="['truncationTime']" />
+      </a-form-item>
+      <AstSelect
+        v-if="shouldLifeDistributionModelShow()"
+        dict="LifeDistributionModel"
+        label="分布模型"
+      />
+
+      <a-form-item
+        v-if="shouldFailureThresholdShow()"
+        label="失效阈值"
+        :class="$style.textInput"
+      >
+        <a-input v-decorator="['failureThreshold']" />
+      </a-form-item>
+      <a-form-item
+        v-if="shouldSampleNumberShow()"
+        label="样本总数"
+        :class="$style.textInput"
+      >
+        <a-input v-decorator="['simpleNumber']" />
+      </a-form-item>
+      <a-form-item
+        v-if="shouldTestIntervalShow()"
+        label="测试间隔时间"
+        :class="$style.textInput"
+      >
+        <a-input v-decorator="['testInterval']" />
+      </a-form-item>
+      <a-form-item
+        v-if="shouldTestNumberShow()"
+        label="单次测试总数"
+        :class="$style.textInput"
+      >
+        <a-input v-decorator="['testNumber']" />
+      </a-form-item>
       <AstSelect dict="expDistributeAlgrithm" label="选择经验分布算法" />
       <AstSelect dict="paramEstAlgrithm" label="选择参数估计算法" />
 
@@ -105,7 +237,11 @@ export default {
           <a-button> <a-icon type="upload" /> Click to upload </a-button>
         </a-upload>
       </a-form-item>
-      <a-form-item v-if="true" label="数据文件C" :class="$style.upload">
+      <a-form-item
+        v-if="isDLSelected()"
+        label="数据文件C"
+        :class="$style.upload"
+      >
         <a-upload
           v-decorator="['uploadC']"
           name="file"
@@ -115,7 +251,11 @@ export default {
           <a-button> <a-icon type="upload" /> Click to upload </a-button>
         </a-upload>
       </a-form-item>
-      <a-form-item v-if="true" label="数据文件D" :class="$style.upload">
+      <a-form-item
+        v-if="isDLSelected()"
+        label="数据文件D"
+        :class="$style.upload"
+      >
         <a-upload
           v-decorator="['uploadD']"
           name="file"
@@ -132,6 +272,9 @@ export default {
         dict="stressTypeCount"
         label="选择应力类型个数"
       />
+      <a-form-item label="stressLevelsNumber" :class="$style.textInput">
+        <a-input v-decorator="['stressLevelsNumber']" />
+      </a-form-item>
       <div
         v-for="a in pickedStressTypeCountArray"
         :key="a"
@@ -145,7 +288,6 @@ export default {
           :form-id="`stressCode${a + 1}`"
           label="选择应力类型"
         />
-        <AstSelect dict="aceleratModel" label="选择加速模型" />
         <a-form-item label="应力普通值" :class="$style.textInput">
           <a-input v-decorator="[`normalStress${a + 1}`]" />
         </a-form-item>
@@ -153,14 +295,24 @@ export default {
           <a-input v-decorator="[`accelerateStress${a + 1}`]" />
         </a-form-item>
       </div>
+      <AstSelect dict="aceleratModel" label="选择加速模型" />
 
       <a-form-item
-        v-if="form.getFieldsValue()['analysis-model'] === 'DL'"
-        label="TruncationType(逗号隔开)"
+        v-if="shouldEneryShow()"
+        label="激活能"
         :class="$style.textInput"
       >
-        <a-input v-decorator="['TruncationType']" />
+        <a-input v-decorator="['activationEnergy']" />
       </a-form-item>
+
+      <a-form-item
+        v-if="shouldParamAShow()"
+        label="ParamA"
+        :class="$style.textInput"
+      >
+        <a-input v-decorator="['paramA']" />
+      </a-form-item>
+
       <!-- <AstSelect dict="distributeFunction" label="选择分布函数" /> -->
       <a-form-item label="寿命点估计值" :class="$style.textInput">
         <a-input v-decorator="['presetTime']" />
@@ -199,7 +351,7 @@ export default {
   .textInput {
     display: flex;
     align-items: flex-start;
-    margin: 0.5rem 4rem 0.5rem 0;
+    margin: 0.5rem 8rem 0.5rem 0;
     .select {
       width: 10rem;
     }

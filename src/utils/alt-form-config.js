@@ -46,18 +46,21 @@ export const path = [
     model: 'ph',
     opt: ['dOpt'],
     stressNo: [1, 2, 3, 4, 5],
+    params: ['β', 'z', 'c'],
   },
   {
     model: 'arr',
     opt: ['dOpt'],
     stressNo: [1],
     stressCode: ['temp'],
+    params: ['a', 'b', 'S'],
   },
   {
     model: 'ipl',
     opt: ['dOpt'],
     stressNo: [1],
     stressCode: ['elec'],
+    params: ['a', 'b', 'S'],
   },
   {
     model: 'peck',
@@ -65,12 +68,14 @@ export const path = [
     stressNo: [2],
     stressCode1: ['temp'],
     stressCode2: ['press', 'moist', 'vibr', 'elec'],
+    params: ['a', 'S', 'E', 'n', 'k', 'T'],
   },
   {
     model: 'eyring',
     opt: ['dOpt'],
     stressNo: [1],
     stressCode: ['temp'],
+    params: ['a', 'b', 'k', 'S'],
   },
   {
     model: 'gEyring',
@@ -78,10 +83,12 @@ export const path = [
     stressNo: [2],
     stressCode1: ['temp'],
     stressCode2: ['elec'],
+    params: ['a', 'b', 'T', 'S'],
   },
   {
     model: 'll',
     opt: ['dOpt'],
     stressNo: [2, 3, 4, 5],
+    params: ['S1', 'S2', 'S3', 'S4'],
   },
 ]

@@ -1,10 +1,13 @@
 <script>
 import AltSelect from '@components/alt-select.vue'
 import * as myapi from '@utils/api.js'
+import { path } from '@utils/alt-form-config.js'
+
 export default {
   components: { AltSelect },
   data() {
     return {
+      path,
       pickedStressMode: '',
       pickedAceleratModel: '',
       pickedOptimizationCode: '',
@@ -33,6 +36,14 @@ export default {
       e.preventDefault()
       myapi.newAlt(this.form.getFieldsValue())
       this.$router.push('alt-list')
+    },
+    paramsOfNthStress(n) {
+      let params = []
+      const nthModel = this.form.getFieldsValue()[`pickedAceleratModel${n + 1}`]
+      if (nthModel) {
+        params = path.filter((res) => res.model === nthModel)[0].params
+      }
+      return params
     },
   },
 }
@@ -87,11 +98,11 @@ export default {
           label="选择应力水平个数"
         />
         <div
-          v-for="item in paramCount"
+          v-for="item in paramsOfNthStress(a)"
           :key="`param${item}`"
           :class="$style.inputField"
         >
-          <a-form-item :label="`模型参数${item + 1}:：`">
+          <a-form-item :label="`${item}：`">
             <a-input v-decorator="[`param${item}`]" />
           </a-form-item>
         </div>
