@@ -41,11 +41,12 @@ export default {
         Test_sample: formV.testSample,
         cut_off_time: formV.cutOffTime,
         optAlgorithm: formV.pickedOptimizationAlgrithm,
+        PHPA_beta: Array(formV.PHPA_beta),
       }
 
       console.log('dataForSubmit', dataForSubmit)
 
-      myapi.newAlt(this.form.getFieldsValue())
+      myapi.newAlt(dataForSubmit)
       this.$router.push('alt-list')
     },
     paramsStress() {

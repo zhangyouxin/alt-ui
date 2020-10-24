@@ -13,12 +13,12 @@ export const hello = async () => {
 export const newAlt = async (params) => {
   let result = ''
   await axios
-    .post(`${process.env.VUE_APP_API}/alt`, { params: JSON.stringify(params) })
+    .post(`${process.env.VUE_APP_API}/alt`, { params: '隐藏参数' })
     .then((response) => {
       console.log('new alt done', response.data)
       return axios
-        .post(`${process.env.VUE_APP_API_PYTHON}`, {
-          params: JSON.stringify(params),
+        .post(`${process.env.VUE_APP_API_ALT}`, {
+          ...params,
           type: 'alt',
           id: response.data.id,
         })

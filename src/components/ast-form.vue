@@ -57,7 +57,7 @@ export default {
         presetTime: formV.presetTime,
         presetReliability: formV.presetRelability,
         stressLevelsNumber: '4',
-        stressTypesNumber: '2',
+        stressTypesNumber: formV.pickedStressTypeCount,
         stresses: stressArray,
       }
       console.log('dataForSubmit', dataForSubmit)
@@ -267,6 +267,11 @@ export default {
         dict="stressTypeCount"
         label="选择应力类型个数"
       />
+      <AstSelect
+        :options="getAcelaratModelOptions()"
+        label="选择加速模型"
+        :form-id="'aceleratModel'"
+      />
       <a-form-item label="stressLevelsNumber" :class="$style.textInput">
         <a-input v-decorator="['stressLevelsNumber']" />
       </a-form-item>
@@ -289,8 +294,6 @@ export default {
           <a-input v-decorator="[`accelerateStress${a + 1}`]" />
         </a-form-item>
       </div>
-      <AstSelect :options="getAcelaratModelOptions()" label="选择加速模型" />
-
       <a-form-item
         v-if="shouldEneryShow()"
         label="激活能"

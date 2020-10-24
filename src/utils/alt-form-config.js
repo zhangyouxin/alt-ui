@@ -12,11 +12,11 @@ export const optimizationCode = {
 export const optimizationAlgrithm = {
   PSO: '粒子群算法',
   legacy: '遗传算法',
-  ranWalk: '随机游走算法',
+  ranwalk: '随机游走算法',
 }
 
 export const aceleratModel = {
-  ph: '比例危险-比例优势',
+  phpa: '比例危险-比例优势',
   arr: '阿伦尼斯',
   ipl: '逆幂律',
   peck: 'peck',
@@ -43,7 +43,7 @@ export const stressTypeCount = {
 
 export const path = [
   {
-    model: 'ph',
+    model: 'phpa',
     opt: ['dOpt'],
     stressNo: {
       1: '1',
