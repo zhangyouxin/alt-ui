@@ -2,6 +2,7 @@
 import AstSelect from '@components/ast-select.vue'
 import { get } from 'lodash'
 import * as myapi from '@utils/api.js'
+import * as config from '@utils/ast-form-config'
 import {
   translateExpDistributeAlgrithm,
   translateParamEstAlgrithm,
@@ -12,23 +13,22 @@ export default {
   components: { AstSelect },
   data() {
     return {
+      config,
       myapi,
       process,
-      pickedStressTypeCount: 1,
     }
   },
-  computed: {
-    pickedStressTypeCountArray: function() {
-      const count = Number(this.pickedStressTypeCount)
-      return Array.from(Array(count).keys())
-    },
-  },
+  computed: {},
   beforeCreate() {
     this.form = this.$form.createForm(this, {
       name: 'ast-form-control',
     })
   },
   methods: {
+    pickedStressTypeCountArray() {
+      const count = Number(this.getForm().pickedStressTypeCount || 1)
+      return Array.from(Array(count).keys())
+    },
     handleSubmit(e) {
       e.preventDefault()
       const formV = this.form.getFieldsValue()
@@ -36,7 +36,7 @@ export default {
       formV.fileNameC = get(formV, ['uploadC', 'file', 'response', 'saveName'])
       formV.fileNameD = get(formV, ['uploadD', 'file', 'response', 'saveName'])
       console.log('formV', formV)
-      const stressArray = this.pickedStressTypeCountArray.map((index) => {
+      const stressArray = this.pickedStressTypeCountArray().map((index) => {
         return {
           stressType: translateStressCode[formV[`stressCode${index + 1}`]],
           accelateStress: formV[`accelerateStress${index + 1}`].split(','),
@@ -127,28 +127,28 @@ export default {
       return this.getForm()['analysis-model'] === 'DL'
     },
     shouldTruncationTimeShow() {
-      return (
-        this.getForm()['analysis-model'] === 'DL' ||
-        this.selectedMode() === 'steady'
-      )
+      return this.getForm()['analysis-model'] === 'DL'
     },
     shouldTruncationTypeShow() {
-      return (
-        this.getForm()['analysis-model'] === 'DL' ||
-        this.selectedMode() === 'step'
-      )
+      return this.getForm()['analysis-model'] === 'DL'
     },
     shouldLifeDistributionModelShow() {
-      return (
-        this.getForm()['analysis-model'] === 'DL' ||
-        this.selectedMode() === 'steady'
-      )
+      return this.getForm()['analysis-model'] === 'DL'
     },
     shouldTestModelShow() {
-      return (
-        this.getForm()['analysis-model'] === 'DL' ||
-        this.selectedMode() === 'step'
-      )
+      return this.getForm()['analysis-model'] === 'DL'
+    },
+    isDualStress() {
+      return this.getForm().pickedStressTypeCount === '2'
+    },
+    getAcelaratModelOptions() {
+      console.log('is dual stress, ', this.isDualStress())
+
+      let result = { peck: 'peck' }
+      if (!this.isDualStress()) {
+        result = config.aceleratModel
+      }
+      return result
     },
   },
 }
@@ -172,11 +172,7 @@ export default {
         </a-radio-group>
       </a-form-item>
 
-      <AstSelect
-        :options="['steady', 'step']"
-        dict="stressMode"
-        label="选择应力变化模式"
-      />
+      <AstSelect dict="stressMode" label="选择应力变化模式" />
 
       <AstSelect
         v-if="shouldTruncationTestTypeShow()"
@@ -267,8 +263,7 @@ export default {
       </a-form-item>
 
       <AstSelect
-        v-model="pickedStressTypeCount"
-        :options="[1, 2, 3, 4, 5]"
+        :form-id="'pickedStressTypeCount'"
         dict="stressTypeCount"
         label="选择应力类型个数"
       />
@@ -276,14 +271,13 @@ export default {
         <a-input v-decorator="['stressLevelsNumber']" />
       </a-form-item>
       <div
-        v-for="a in pickedStressTypeCountArray"
+        v-for="a in pickedStressTypeCountArray()"
         :key="a"
         :class="$style.stressOption"
       >
         <span>{{ `应力${a + 1}：` }}</span>
         <div :class="$style.divider" />
         <AstSelect
-          :options="['temp']"
           dict="stressCode"
           :form-id="`stressCode${a + 1}`"
           label="选择应力类型"
@@ -295,7 +289,7 @@ export default {
           <a-input v-decorator="[`accelerateStress${a + 1}`]" />
         </a-form-item>
       </div>
-      <AstSelect dict="aceleratModel" label="选择加速模型" />
+      <AstSelect :options="getAcelaratModelOptions()" label="选择加速模型" />
 
       <a-form-item
         v-if="shouldEneryShow()"

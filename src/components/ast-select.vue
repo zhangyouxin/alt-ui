@@ -11,9 +11,9 @@ export default {
       default: '',
     },
     options: {
-      type: Array,
+      type: Object,
       default() {
-        return []
+        return {}
       },
     },
     dict: {
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     dictOptions: function() {
-      return dicts[this.dict]
+      return this.dict ? dicts[this.dict] : this.options
     },
   },
   methods: {
