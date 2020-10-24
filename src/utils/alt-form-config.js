@@ -21,8 +21,8 @@ export const aceleratModel = {
   ipl: '逆幂律',
   peck: 'peck',
   eyring: '艾琳',
-  gEyring: '广义艾琳',
-  ll: '广义对数线性',
+  // gEyring: '广义艾琳',
+  // ll: '广义对数线性',
 }
 
 export const stressCode = {
@@ -45,42 +45,57 @@ export const path = [
   {
     model: 'ph',
     opt: ['dOpt'],
-    stressNo: [1, 2, 3, 4, 5],
-    params: ['β', 'z', 'c'],
+    stressNo: {
+      1: '1',
+      2: '2',
+      3: '3',
+      4: '4',
+    },
+    params: ['PHPA_beta', 'PHPA_gama1', 'PHPA_gama2', 'PHPA_c'],
   },
   {
     model: 'arr',
     opt: ['dOpt'],
-    stressNo: [1],
+    stressNo: {
+      1: '1',
+    },
     stressCode: ['temp'],
-    params: ['a', 'b', 'S'],
+    params: ['Arrhenius_Energy', 'Arrhenius_A', 'shapeParameter'],
   },
   {
     model: 'ipl',
     opt: ['dOpt'],
-    stressNo: [1],
+    stressNo: {
+      1: '1',
+    },
     stressCode: ['elec'],
-    params: ['a', 'b', 'S'],
+    params: ['Ipl_A', 'Ipl_B', 'shapeParameter'],
   },
   {
     model: 'peck',
     opt: ['dOpt'],
-    stressNo: [2],
+    stressNo: {
+      2: '2',
+    },
     stressCode1: ['temp'],
     stressCode2: ['press', 'moist', 'vibr', 'elec'],
-    params: ['a', 'S', 'E', 'n', 'k', 'T'],
+    params: ['Peck_Energy', 'Peck_B', 'Peck_A', 'shapeParameter'],
   },
   {
     model: 'eyring',
     opt: ['dOpt'],
-    stressNo: [1],
+    stressNo: {
+      1: '1',
+    },
     stressCode: ['temp'],
-    params: ['a', 'b', 'k', 'S'],
+    params: ['Erying_Energy', 'Erying_A', 'shapeParameter'],
   },
   {
     model: 'gEyring',
     opt: ['dOpt'],
-    stressNo: [2],
+    stressNo: {
+      2: '2',
+    },
     stressCode1: ['temp'],
     stressCode2: ['elec'],
     params: ['a', 'b', 'T', 'S'],
@@ -88,7 +103,12 @@ export const path = [
   {
     model: 'll',
     opt: ['dOpt'],
-    stressNo: [2, 3, 4, 5],
+    stressNo: {
+      2: '2',
+      3: '3',
+      4: '4',
+      5: '5',
+    },
     params: ['S1', 'S2', 'S3', 'S4'],
   },
 ]

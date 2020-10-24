@@ -2,30 +2,16 @@
 import AltSelect from '@components/alt-select.vue'
 import * as myapi from '@utils/api.js'
 import { path } from '@utils/alt-form-config.js'
+import { get } from 'lodash'
 
 export default {
   components: { AltSelect },
   data() {
     return {
       path,
-      pickedStressMode: '',
-      pickedAceleratModel: '',
-      pickedOptimizationCode: '',
-      pickedStressTypeCount: 1,
-      pickedStressTypeCodes: [],
-      pickedOptimizationAlgrithm: '',
     }
   },
-  computed: {
-    pickedStressTypeCountArray: function() {
-      const count = Number(this.pickedStressTypeCount)
-      return Array.from(Array(count).keys())
-    },
-    paramCount: function() {
-      const count = Number(this.pickedStressTypeCount)
-      return Array.from(Array(count + 1).keys())
-    },
-  },
+  computed: {},
   beforeCreate() {
     this.form = this.$form.createForm(this, {
       name: 'alt_form_controls',
@@ -34,16 +20,63 @@ export default {
   methods: {
     handleSubmit(e) {
       e.preventDefault()
+
+      const formV = this.form.getFieldsValue()
+      // eslint-disable-next-line no-unused-vars
+      const stressArray = this.pickedStressTypeCountArray().map((index) => {
+        return {
+          stressClass: formV[`stressCode${index + 1}`],
+          initial_value: formV[`initialValue${index + 1}`],
+          limit_value: formV[`limitValue${index + 1}`],
+        }
+      })
+      const dataForSubmit = {
+        ...formV,
+        stresses: stressArray,
+        stressType: formV.pickedStressMode,
+        accelateModel: formV.pickedAceleratModel,
+        optMethod: formV.pickedOptimizationCode,
+        stressNo: formV.pickedStressTypeCount,
+        stressValueNo: formV.stressLevelCount,
+        Test_sample: formV.testSample,
+        cut_off_time: formV.cutOffTime,
+        optAlgorithm: formV.pickedOptimizationAlgrithm,
+      }
+
+      console.log('dataForSubmit', dataForSubmit)
+
       myapi.newAlt(this.form.getFieldsValue())
       this.$router.push('alt-list')
     },
-    paramsOfNthStress(n) {
+    paramsStress() {
       let params = []
-      const nthModel = this.form.getFieldsValue()[`pickedAceleratModel${n + 1}`]
+      const nthModel = this.form.getFieldsValue().pickedAceleratModel
       if (nthModel) {
         params = path.filter((res) => res.model === nthModel)[0].params
       }
       return params
+    },
+    getForm() {
+      return this.form.getFieldsValue()
+    },
+    getStressTypeCount() {
+      const am = this.getForm().pickedAceleratModel
+      const amPath = path.filter((res) => res.model === am)[0]
+      return get(amPath, 'stressNo', {})
+    },
+
+    pickedStressTypeCountArray() {
+      const count = Number(this.getForm().pickedStressTypeCount || 0)
+      return Array.from(Array(count).keys())
+    },
+    isAD() {
+      return (
+        this.getForm().pickedOptimizationCode === 'aOpt' ||
+        this.getForm().pickedOptimizationCode === 'dOpt'
+      )
+    },
+    isMinDelta() {
+      return this.getForm().pickedOptimizationCode === 'minDelta'
     },
   },
 }
@@ -55,72 +88,74 @@ export default {
 
     <a-form :form="form" @submit="handleSubmit">
       <AltSelect
-        v-model="pickedStressMode"
-        :options="['steady', 'step']"
+        :form-id="'pickedStressMode'"
         dict="stressMode"
         label="选择应力变化模式"
       />
       <AltSelect
-        v-model="pickedStressTypeCount"
-        :options="[1, 2, 3, 4, 5]"
-        dict="stressTypeCount"
+        :form-id="`pickedAceleratModel`"
+        dict="aceleratModel"
+        label="选择加速模型"
+      />
+      <AltSelect
+        :form-id="`pickedOptimizationCode`"
+        dict="optimizationCode"
+        label="选择优化方法"
+      />
+      <AltSelect
+        :form-id="'pickedStressTypeCount'"
+        :options="getStressTypeCount()"
         label="选择应力类型个数"
       />
+      <AltSelect
+        dict="stressTypeCount"
+        :form-id="`stressLevelCount`"
+        label="选择应力水平个数"
+      />
+
       <div
-        v-for="a in pickedStressTypeCountArray"
+        v-for="a in pickedStressTypeCountArray()"
         :key="a"
         :class="$style.stressOption"
       >
         <span>{{ `应力${a + 1}：` }}</span>
         <div :class="$style.divider" />
         <AltSelect
-          :form-id="`pickedAceleratModel${a + 1}`"
-          :options="['ph', 'arr', 'ipl', 'peck', 'eyring', 'gEyring', 'll']"
-          dict="aceleratModel"
-          label="选择加速模型"
-        />
-        <AltSelect
-          :form-id="`pickedOptimizationCode${a + 1}`"
-          :options="['aOpt', 'dOpt', 'minDelta']"
-          dict="optimizationCode"
-          label="选择优化方法"
-        />
-        <AltSelect
-          :options="['temp']"
           dict="stressCode"
           :form-id="`stressCode${a + 1}`"
           label="选择应力类型"
         />
-        <AltSelect
-          :options="['temp']"
-          dict="stressTypeCount"
-          :form-id="`stressTypeCount${a + 1}`"
-          label="选择应力水平个数"
-        />
-        <div
-          v-for="item in paramsOfNthStress(a)"
-          :key="`param${item}`"
-          :class="$style.inputField"
-        >
-          <a-form-item :label="`${item}：`">
-            <a-input v-decorator="[`param${item}`]" />
-          </a-form-item>
-        </div>
+        <a-form-item label="初始值">
+          <a-input v-decorator="[`initialValue${a + 1}`]" />
+        </a-form-item>
+        <a-form-item label="限定值">
+          <a-input v-decorator="[`limitValue${a + 1}`]" />
+        </a-form-item>
+      </div>
+      <a-form-item v-if="isAD()" label="测试样本数量">
+        <a-input v-decorator="['testSample']" />
+      </a-form-item>
+      <a-form-item v-if="isMinDelta()" label="置信度">
+        <a-input v-decorator="['confidence']" />
+      </a-form-item>
+      <a-form-item label="截尾时间">
+        <a-input v-decorator="['cutOffTime']" />
+      </a-form-item>
+      <div
+        v-for="item in paramsStress()"
+        :key="`${item}`"
+        :class="$style.inputField"
+      >
+        <a-form-item :label="`${item}：`">
+          <a-input v-decorator="[`${item}`]" />
+        </a-form-item>
       </div>
 
       <AltSelect
-        v-model="pickedOptimizationAlgrithm"
-        :options="['PSO', 'legacy', 'ranWalk']"
+        :form-id="'pickedOptimizationAlgrithm'"
         dict="optimizationAlgrithm"
         label="选择优化算法"
       />
-      <!--
-      <div>{{ pickedStressMode }}</div>
-      <div>{{ pickedAceleratModel }}</div>
-      <div>{{ pickedOptimizationCode }}</div>
-      <div>{{ pickedStressTypeCount }}</div>
-      <div>{{ pickedStressTypeCodes }}</div>
-      <div>{{ pickedOptimizationAlgrithm }}</div> -->
       <a-form-item>
         <a-button type="primary" html-type="submit">
           Submit
