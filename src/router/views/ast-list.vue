@@ -11,6 +11,13 @@ const columns = [
     scopedSlots: { customRender: 'id' },
   },
   {
+    title: '名称',
+    dataIndex: 'itemName',
+    key: 'itemName',
+    width: 120,
+    scopedSlots: { customRender: 'itemName' },
+  },
+  {
     title: '完成状态',
     dataIndex: 'isDone',
     key: 'isDone',
@@ -68,6 +75,7 @@ export default {
         return {
           key: item.id,
           id: item.id,
+          itemName: item.itemName,
           isDone: item.isDone,
           params: item.params,
           result: item.result,

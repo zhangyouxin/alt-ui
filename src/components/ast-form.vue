@@ -158,6 +158,9 @@ export default {
   <div :class="$style.container">
     <div :class="$style.title">数据分析</div>
     <a-form :form="form" @submit="handleSubmit">
+      <a-form-item label="名称">
+        <a-input v-decorator="[`itemName`]" />
+      </a-form-item>
       <a-form-item label="选择加速分析模型" :class="$style.accelarateModel">
         <a-radio-group v-decorator="['analysis-model']">
           <a-radio value="AL">

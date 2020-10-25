@@ -13,7 +13,10 @@ export const hello = async () => {
 export const newAlt = async (params) => {
   let result = ''
   await axios
-    .post(`${process.env.VUE_APP_API}/alt`, { params: '隐藏参数' })
+    .post(`${process.env.VUE_APP_API}/alt`, {
+      params: '隐藏参数',
+      itemName: params.itemName,
+    })
     .then((response) => {
       console.log('new alt done', response.data)
       return axios
@@ -46,7 +49,10 @@ export const newDevice = async (params) => {
 export const newAst = async (params) => {
   let result = ''
   await axios
-    .post(`${process.env.VUE_APP_API}/ast`, { params: '隐藏参数' })
+    .post(`${process.env.VUE_APP_API}/ast`, {
+      params: '隐藏参数',
+      itemName: params.itemName,
+    })
     .then((response) => {
       console.log('new ast done', response.data)
       return axios

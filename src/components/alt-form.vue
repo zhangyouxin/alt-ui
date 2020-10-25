@@ -88,6 +88,9 @@ export default {
     <div :class="$style.title">寿命加速实验</div>
 
     <a-form :form="form" @submit="handleSubmit">
+      <a-form-item label="名称">
+        <a-input v-decorator="[`itemName`]" />
+      </a-form-item>
       <AltSelect
         :form-id="'pickedStressMode'"
         dict="stressMode"
