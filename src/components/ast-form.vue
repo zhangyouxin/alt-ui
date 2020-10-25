@@ -59,6 +59,7 @@ export default {
         stressLevelsNumber: '4',
         stressTypesNumber: formV.pickedStressTypeCount,
         stresses: stressArray,
+        itemName: formV.itemName,
       }
       console.log('dataForSubmit', dataForSubmit)
       myapi.newAst(dataForSubmit)
