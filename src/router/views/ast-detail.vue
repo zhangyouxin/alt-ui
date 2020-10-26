@@ -7,6 +7,7 @@ import LineChart from '@components/line-chart.vue'
 import { tzToDate } from '@utils/format-time'
 import { get } from 'lodash'
 import { resultMapping } from '@utils/ast-form-config.js'
+import { DocumentCreator } from '@utils/docGenerator.js'
 const columns = [
   {
     title: '属性',
@@ -236,6 +237,21 @@ export default {
         this.$store.dispatch('fetchAst', this.$route.params.id)
       }, 5000)
     },
+    generateDoc() {
+      const docCreator = new DocumentCreator()
+      const reportData = {
+        一般寿命: this.results.normalLife,
+        可靠性预估点: this.results.normalLife,
+        寿命预估点: this.results.normalLife,
+        最佳匹配模型: this.results.normalLife,
+      }
+      if (this.results.parameterName) {
+        this.results.parameterName.forEach((name, index) => {
+          reportData[name] = this.results.parameterSet[index]
+        })
+      }
+      docCreator.generate(reportData)
+    },
   },
 }
 </script>
@@ -288,6 +304,7 @@ export default {
             :value="parameterSet[index]"
           />
         </div>
+        <BaseButton @click="generateDoc">导出实验结果</BaseButton>
       </WCard>
       <WCard title="加速失效曲线">
         <LineChart
