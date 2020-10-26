@@ -24,6 +24,7 @@ const columns = [
   },
 ]
 export default {
+  name: 'AstDetail',
   components: { Layout, WCard, LineChart, TextField },
   data() {
     return {
@@ -33,7 +34,7 @@ export default {
   },
   computed: {
     accelerateFactorCurveData() {
-      const detail = this.results.accelerateFactorCurve
+      const detail = get(this.results.accelerateFactorCurve, [0, 'curve'])
       console.log('accelerateFactorCurve', detail)
       return detail
     },
@@ -95,12 +96,12 @@ export default {
       return get(this.results, 'parameterSet')
     },
     accumulateInvalidCurveData() {
-      const detail = this.results.accumulateInvalidCurve
+      const detail = get(this.results.accumulateInvalidCurve, [0, 'curve'])
       console.log('accumulateInvalidCurve', detail)
       return detail
     },
     accelarateModelCurveData() {
-      const detail = this.results.accelerateModelCurve
+      const detail = (this.results.accelerateModelCurveget, [0, 'curve'])
       console.log('accelarateModelCurve', detail)
       return detail
     },
