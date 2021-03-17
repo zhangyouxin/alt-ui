@@ -36,7 +36,6 @@ export default {
   computed: {
     accelerateFactorCurveData() {
       const detail = get(this.results.accelerateFactorCurve, [0, 'curve'])
-      console.log('accelerateFactorCurve', detail)
       return detail
     },
     accelerateFactorCurve() {
@@ -98,12 +97,10 @@ export default {
     },
     accumulateInvalidCurveData() {
       const detail = get(this.results.accumulateInvalidCurve, [0, 'curve'])
-      console.log('accumulateInvalidCurve', detail)
       return detail
     },
     accelarateModelCurveData() {
       const detail = (this.results.accelerateModelCurveget, [0, 'curve'])
-      console.log('accelarateModelCurve', detail)
       return detail
     },
     accumulateInvalidCurve() {
@@ -226,6 +223,13 @@ export default {
     meta: [{ name: '强化寿命实验', content: '强化寿命实验' }],
   },
   methods: {
+    getInvalidCurve: function() {
+      const canvas = document
+        .getElementById('line-chart')
+        .toDataURL('image/png')
+      const trimedCanvas = canvas.substr(canvas.indexOf('base64') + 7)
+      return trimedCanvas
+    },
     is3DArray(arr) {
       return arr && arr.length === 3
     },
@@ -239,6 +243,7 @@ export default {
     },
     generateDoc() {
       const docCreator = new DocumentCreator()
+      const invalidCurveBase64 = this.getInvalidCurve()
       const reportData = {
         一般寿命: this.results.normalLife,
         可靠性预估点: this.results.normalLife,
@@ -250,7 +255,7 @@ export default {
           reportData[name] = this.results.parameterSet[index]
         })
       }
-      docCreator.generate(reportData)
+      docCreator.generate(reportData, invalidCurveBase64, this.dataSource)
     },
   },
 }

@@ -50,7 +50,7 @@ export const newAst = async (params) => {
   let result = ''
   await axios
     .post(`${process.env.VUE_APP_API}/ast`, {
-      params: '隐藏参数',
+      params: JSON.stringify(params),
       itemName: params.itemName,
     })
     .then((response) => {
