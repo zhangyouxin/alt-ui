@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
+import envs from './env'
 const axios = require('axios')
 
 export const hello = async () => {
   let result = ''
   await axios
-    .get(process.env.VUE_APP_API)
+    .get(envs.api)
     .then((response) => (result = response.data))
     .catch((error) => console.error(error))
   return result
@@ -13,14 +14,14 @@ export const hello = async () => {
 export const newAlt = async (params) => {
   let result = ''
   await axios
-    .post(`${process.env.VUE_APP_API}/alt`, {
+    .post(`${envs.api}/alt`, {
       params: '隐藏参数',
       itemName: params.itemName,
     })
     .then((response) => {
       console.log('new alt done', response.data)
       return axios
-        .post(`${process.env.VUE_APP_API_ALT}`, {
+        .post(`${envs.alt}`, {
           ...params,
           type: 'alt',
           id: response.data.id,
@@ -40,7 +41,7 @@ export const newAlt = async (params) => {
 export const newDevice = async (params) => {
   let result = ''
   await axios
-    .post(`${process.env.VUE_APP_API}/device`, { ...params })
+    .post(`${envs.api}/device`, { ...params })
     .then((response) => (result = response.data))
     .catch((error) => console.error(error))
   return result
@@ -49,14 +50,14 @@ export const newDevice = async (params) => {
 export const newAst = async (params) => {
   let result = ''
   await axios
-    .post(`${process.env.VUE_APP_API}/ast`, {
+    .post(`${envs.api}/ast`, {
       params: JSON.stringify(params),
       itemName: params.itemName,
     })
     .then((response) => {
       console.log('new ast done', response.data)
       return axios
-        .post(`${process.env.VUE_APP_API_PYTHON}`, {
+        .post(`${envs.python}`, {
           ...params,
           type: 'ast',
           id: response.data.id,
@@ -75,7 +76,7 @@ export const newAst = async (params) => {
 export const fetchCountLatestAlts = async (params) => {
   let result = ''
   await axios
-    .get(`${process.env.VUE_APP_API}/countLatestAlts`)
+    .get(`${envs.api}/countLatestAlts`)
     .then((response) => {
       result = response.data
     })
@@ -86,7 +87,7 @@ export const fetchCountLatestAlts = async (params) => {
 export const fetchCountLatestAsts = async (params) => {
   let result = ''
   await axios
-    .get(`${process.env.VUE_APP_API}/countLatestAsts`)
+    .get(`${envs.api}/countLatestAsts`)
     .then((response) => {
       result = response.data
     })
@@ -97,7 +98,7 @@ export const fetchCountLatestAsts = async (params) => {
 export const fetchCountAll = async (params) => {
   let result = ''
   await axios
-    .get(`${process.env.VUE_APP_API}/countAll`)
+    .get(`${envs.api}/countAll`)
     .then((response) => {
       result = response.data
     })
@@ -108,7 +109,7 @@ export const fetchCountAll = async (params) => {
 export const login = async (params) => {
   let result = ''
   await axios
-    .post(`${process.env.VUE_APP_API}/login`, { ...params })
+    .post(`${envs.api}/login`, { ...params })
     .then((response) => {
       result = response.data
     })

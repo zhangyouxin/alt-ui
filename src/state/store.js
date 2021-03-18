@@ -5,6 +5,7 @@ import dispatchActionForAllModules from '@utils/dispatch-action-for-all-modules'
 import axios from 'axios'
 import * as api from '@utils/api'
 import md5 from 'md5'
+import envs from '@utils/env'
 import modules from './modules'
 
 Vue.use(Vuex)
@@ -96,7 +97,7 @@ const store = new Vuex.Store({
     fetchAstResult(context, id) {
       console.log(process.env)
       return axios
-        .get(`${process.env.VUE_APP_API_ES}/ast/_doc/${id}`)
+        .get(`${envs.es}/ast/_doc/${id}`)
         .then((response) => {
           console.log(response)
           context.commit('setCurrentAstCurves', {
@@ -111,7 +112,7 @@ const store = new Vuex.Store({
     fetchAltResult(context, id) {
       console.log(process.env)
       return axios
-        .get(`${process.env.VUE_APP_API_ES}/alt/_doc/${id}`)
+        .get(`${envs.es}/alt/_doc/${id}`)
         .then((response) => {
           console.log(response)
           context.commit('setCurrentAltCurves', {
@@ -126,7 +127,7 @@ const store = new Vuex.Store({
     async login(context, { username, password }) {
       const response = await api.login({ username, password: md5(password) })
       console.log('login response is:', response)
-      if (response === 0) {
+      if (response === 1) {
         context.commit('setUser', username)
         return new Promise((resolve, reject) => {
           resolve(username)
@@ -144,7 +145,7 @@ const store = new Vuex.Store({
     fetchAlts(context, e) {
       const result = 'init value'
       axios
-        .get(`${process.env.VUE_APP_API}/alt`, {
+        .get(`${envs.api}/alt`, {
           params: {
             pageNumber: e ? e.current - 1 : 0,
             pageSize: e ? e.pageSize : 15,
@@ -161,7 +162,7 @@ const store = new Vuex.Store({
     fetchDevices(context, e) {
       const result = 'init value'
       axios
-        .get(`${process.env.VUE_APP_API}/device`, {
+        .get(`${envs.api}/device`, {
           params: {
             pageNumber: e ? e.current - 1 : 0,
             pageSize: e ? e.pageSize : 15,
@@ -178,7 +179,7 @@ const store = new Vuex.Store({
     fetchAlt(context, id) {
       console.log(id)
       axios
-        .get(`${process.env.VUE_APP_API}/alt/${id}`)
+        .get(`${envs.api}/alt/${id}`)
         .then((response) => {
           const result = response.data
           context.commit('setCurrentAlt', result)
@@ -189,7 +190,7 @@ const store = new Vuex.Store({
     fetchAsts(context, e) {
       const result = 'init value'
       axios
-        .get(`${process.env.VUE_APP_API}/ast`, {
+        .get(`${envs.api}/ast`, {
           params: {
             pageNumber: e ? e.current - 1 : 0,
             pageSize: e ? e.pageSize : 15,
@@ -205,7 +206,7 @@ const store = new Vuex.Store({
     },
     fetchAst(context, id) {
       axios
-        .get(`${process.env.VUE_APP_API}/ast/${id}`)
+        .get(`${envs.api}/ast/${id}`)
         .then((response) => {
           const result = response.data
           context.commit('setCurrentAst', result)
